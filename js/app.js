@@ -27,8 +27,8 @@ function showRound() {
   drawRound();
   attempts.textContent = `Wrong guesses: ${round.wrongGuesses} / ${round.maxWrongGuesses}`;
   input.disabled = round.status !== 'playing';
+  form.hidden = round.status !== 'playing';
   newRoundButton.hidden = round.status === 'playing';
-
 }
 
 function startRound() {
