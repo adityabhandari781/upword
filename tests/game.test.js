@@ -69,7 +69,7 @@ test('valid wrong guesses reveal one row and consume one attempt', () => {
   assert.equal(result.state.status, 'playing');
 });
 
-test('the correct guess wins without revealing another row', () => {
+test('the correct guess wins and reveals the full pixel word', () => {
   const round = createRound({
     answer: 'cabin',
     pixelHeight: 7,
@@ -81,10 +81,10 @@ test('the correct guess wins without revealing another row', () => {
   assert.equal(result.outcome, 'correct');
   assert.equal(result.state.status, 'won');
   assert.equal(result.state.wrongGuesses, 0);
-  assert.equal(result.state.revealedRows, 1);
+  assert.equal(result.state.revealedRows, 7);
 });
 
-test('the half-height wrong guess loses without revealing more than the limit', () => {
+test('the half-height wrong guess loses and reveals the full pixel word', () => {
   const round = createRound({
     answer: 'cabin',
     pixelHeight: 7,
@@ -98,5 +98,5 @@ test('the half-height wrong guess loses without revealing more than the limit', 
   assert.equal(third.outcome, 'lost');
   assert.equal(third.state.status, 'lost');
   assert.equal(third.state.wrongGuesses, 3);
-  assert.equal(third.state.revealedRows, 4);
+  assert.equal(third.state.revealedRows, 7);
 });

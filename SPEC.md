@@ -8,9 +8,10 @@ only the word image's bottom row visible. Each valid, incorrect guess reveals
 the next row upward; no Wordle-style letter feedback is shown.
 
 The player wins by guessing the word. They lose after `floor(pixelHeight / 2)`
-valid wrong guesses, so the full image is never revealed. Success is a player
-being able to start, play, win or lose, and immediately start a new random
-round on modern desktop and mobile browsers.
+valid wrong guesses. During play, the image stays partially hidden; when a
+round ends, its full pixel word is revealed. Success is a player being able to
+start, play, win or lose, and immediately start a new random round on modern
+desktop and mobile browsers.
 
 ## Tech Stack
 
@@ -92,8 +93,9 @@ export function maxWrongGuesses(pixelHeight) {
 3. A valid wrong guess reveals exactly one next pixel row and consumes one
    wrong-guess attempt; it gives no per-letter result.
 4. A correct valid guess ends the round as a win without revealing another row.
-5. The loss limit is `floor(pixelHeight / 2)` valid wrong guesses; the answer
-   is then displayed and a new-round control is available.
+5. The loss limit is `floor(pixelHeight / 2)` valid wrong guesses; when a round
+   ends, the answer and its fully revealed pixel canvas are displayed, with a
+   new-round control available.
 6. The game works with keyboard input and at narrow mobile widths, with visible
    controls and outcome messages available to assistive technologies.
 7. `node --test tests/game.test.js` passes.

@@ -32,7 +32,7 @@ export function submitGuess(round, rawGuess) {
   if (guess === round.answer) {
     return {
       outcome: 'correct',
-      state: { ...round, status: 'won' },
+      state: { ...round, revealedRows: round.pixelHeight, status: 'won' },
     };
   }
 
@@ -43,7 +43,9 @@ export function submitGuess(round, rawGuess) {
     state: {
       ...round,
       wrongGuesses,
-      revealedRows: Math.min(round.revealedRows + 1, round.maxWrongGuesses + 1),
+      revealedRows: isLost
+        ? round.pixelHeight
+        : Math.min(round.revealedRows + 1, round.maxWrongGuesses + 1),
       status: isLost ? 'lost' : 'playing',
     },
   };
