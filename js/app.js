@@ -62,7 +62,7 @@ form.addEventListener('submit', (event) => {
   if (result.outcome === 'correct') {
     status.textContent = 'Correct — you found the hidden word.';
   } else if (result.outcome === 'lost') {
-    status.textContent = 'The shape stayed hidden, but this round is over.';
+    status.textContent = 'The full word is now revealed.';
   } else {
     status.textContent = 'Not quite. One more row is visible.';
   }
