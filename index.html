@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Guess the hidden word from its pixel rows.">
+    <title>Height Wordle</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="game-header">
+        <p class="eyebrow">A visual word puzzle</p>
+        <h1>Height Wordle</h1>
+        <p class="intro">Read the pixels from the bottom up. Guess the word before its shape gives it away.</p>
+      </header>
+
+      <section class="game-card" aria-labelledby="puzzle-heading">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">Puzzle</p>
+            <h2 id="puzzle-heading">What word is hiding?</h2>
+          </div>
+          <p id="attempts" class="attempts">Wrong guesses: 0 / 3</p>
+        </div>
+
+        <div class="canvas-frame">
+          <canvas id="word-canvas" role="img" aria-label="Partially revealed pixel word"></canvas>
+        </div>
+
+        <p id="status" class="status" aria-live="polite">The bottom row is your first clue.</p>
+        <p id="answer-reveal" class="answer-reveal" aria-live="polite"></p>
+
+        <form id="guess-form" class="guess-form" novalidate>
+          <label for="guess">Your guess</label>
+          <div class="guess-controls">
+            <input id="guess" name="guess" type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" required>
+            <button type="submit">Reveal row</button>
+          </div>
+        </form>
+
+        <button id="new-round" class="new-round" type="button" hidden>New puzzle</button>
+      </section>
+    </main>
+  </body>
+</html>

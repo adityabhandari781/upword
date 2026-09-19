@@ -1,0 +1,50 @@
+import { allowedGuesses } from './words.js';
+
+export function maxWrongGuesses(pixelHeight) {
+  return Math.floor(pixelHeight / 2);
+}
+
+export function createRound({ answer, pixelHeight }) {
+  return {
+    answer,
+    pixelHeight,
+    maxWrongGuesses: maxWrongGuesses(pixelHeight),
+    wrongGuesses: 0,
+    revealedRows: 1,
+    status: 'playing',
+  };
+}
+
+export function normalizeGuess(value) {
+  return typeof value === 'string' ? value.trim().toLowerCase() : '';
+}
+
+export function submitGuess(round, rawGuess) {
+  if (round.status !== 'playing') {
+    return { outcome: 'finished', state: round };
+  }
+
+  const guess = normalizeGuess(rawGuess);
+  if (!/^[a-z]+$/.test(guess) || !allowedGuesses.includes(guess)) {
+    return { outcome: 'invalid', state: round };
+  }
+
+  if (guess === round.answer) {
+    return {
+      outcome: 'correct',
+      state: { ...round, status: 'won' },
+    };
+  }
+
+  const wrongGuesses = round.wrongGuesses + 1;
+  const isLost = wrongGuesses >= round.maxWrongGuesses;
+  return {
+    outcome: isLost ? 'lost' : 'wrong',
+    state: {
+      ...round,
+      wrongGuesses,
+      revealedRows: Math.min(round.revealedRows + 1, round.maxWrongGuesses + 1),
+      status: isLost ? 'lost' : 'playing',
+    },
+  };
+}
