@@ -8,7 +8,6 @@ const form = document.querySelector('#guess-form');
 const input = document.querySelector('#guess');
 const status = document.querySelector('#status');
 const attempts = document.querySelector('#attempts');
-const answerReveal = document.querySelector('#answer-reveal');
 const newRoundButton = document.querySelector('#new-round');
 
 let round;
@@ -30,12 +29,6 @@ function showRound() {
   input.disabled = round.status !== 'playing';
   newRoundButton.hidden = round.status === 'playing';
 
-  if (round.status === 'playing') {
-    answerReveal.textContent = '';
-    return;
-  }
-
-  answerReveal.textContent = `The word was ${round.answer}.`;
 }
 
 function startRound() {
