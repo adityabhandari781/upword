@@ -1,34 +1,16 @@
-export const answerWords = [
-  'apple',
-  'beach',
-  'cabin',
-  'caper',
-  'cedar',
-  'chair',
-  'chess',
-  'civic',
-  'crane',
-  'daisy',
-  'dream',
-  'eagle',
-  'flame',
-  'globe',
-  'grape',
-  'house',
-  'lemon',
-  'maple',
-  'ocean',
-  'olive',
-  'piano',
-  'pride',
-  'quiet',
-  'river',
-  'smile',
-  'spice',
-  'stare',
-  'stone',
-  'table',
-  'tiger',
-];
+// Original Wordle-style lists, vendored from
+// https://github.com/deedy/wordle-solver/tree/main/data
+async function loadWordList(path) {
+  const response = await fetch(path);
 
-export const allowedGuesses = answerWords;
+  if (!response.ok) {
+    throw new Error(`Could not load word list: ${path}`);
+  }
+
+  return (await response.text()).trim().split('\n');
+}
+
+export const [answerWords, allowedGuesses] = await Promise.all([
+  loadWordList('./data/answer-words.txt'),
+  loadWordList('./data/allowed-guesses.txt'),
+]);

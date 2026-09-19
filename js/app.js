@@ -1,4 +1,4 @@
-import { answerWords } from './words.js';
+import { allowedGuesses, answerWords } from './words.js';
 import { createRound, submitGuess } from './game.js';
 import { drawPixelWord, wordDimensions } from './glyphs.js';
 
@@ -41,7 +41,7 @@ function startRound() {
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const result = submitGuess(round, input.value);
+  const result = submitGuess(round, input.value, allowedGuesses);
   round = result.state;
 
   if (result.outcome === 'invalid') {

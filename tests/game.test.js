@@ -37,10 +37,21 @@ test('invalid guesses do not consume an attempt or reveal a row', () => {
     allowedGuesses,
   });
 
-  const result = submitGuess(round, 'not-in-list');
+  const result = submitGuess(round, 'not-in-list', allowedGuesses);
 
   assert.equal(result.outcome, 'invalid');
   assert.deepEqual(result.state, round);
+});
+
+test('validates guesses against the supplied dictionary', () => {
+  const round = createRound({
+    answer: 'cabin',
+    pixelHeight: 7,
+  });
+
+  const result = submitGuess(round, 'crane', ['cabin']);
+
+  assert.equal(result.outcome, 'invalid');
 });
 
 test('empty and non-alphabetic guesses are invalid', () => {
@@ -50,8 +61,8 @@ test('empty and non-alphabetic guesses are invalid', () => {
     allowedGuesses,
   });
 
-  assert.equal(submitGuess(round, '').outcome, 'invalid');
-  assert.equal(submitGuess(round, 'crane!').outcome, 'invalid');
+  assert.equal(submitGuess(round, '', allowedGuesses).outcome, 'invalid');
+  assert.equal(submitGuess(round, 'crane!', allowedGuesses).outcome, 'invalid');
 });
 
 test('valid wrong guesses reveal one row and consume one attempt', () => {
@@ -61,7 +72,7 @@ test('valid wrong guesses reveal one row and consume one attempt', () => {
     allowedGuesses,
   });
 
-  const result = submitGuess(round, 'crane');
+  const result = submitGuess(round, 'crane', allowedGuesses);
 
   assert.equal(result.outcome, 'wrong');
   assert.equal(result.state.wrongGuesses, 1);
@@ -76,7 +87,7 @@ test('the correct guess wins and reveals the full pixel word', () => {
     allowedGuesses,
   });
 
-  const result = submitGuess(round, ' CABIN ');
+  const result = submitGuess(round, ' CABIN ', allowedGuesses);
 
   assert.equal(result.outcome, 'correct');
   assert.equal(result.state.status, 'won');
@@ -91,9 +102,9 @@ test('the half-height wrong guess loses and reveals the full pixel word', () => 
     allowedGuesses,
   });
 
-  const first = submitGuess(round, 'crane');
-  const second = submitGuess(first.state, 'caper');
-  const third = submitGuess(second.state, 'crane');
+  const first = submitGuess(round, 'crane', allowedGuesses);
+  const second = submitGuess(first.state, 'caper', allowedGuesses);
+  const third = submitGuess(second.state, 'crane', allowedGuesses);
 
   assert.equal(third.outcome, 'lost');
   assert.equal(third.state.status, 'lost');

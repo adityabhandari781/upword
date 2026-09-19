@@ -1,5 +1,3 @@
-import { allowedGuesses } from './words.js';
-
 export function maxWrongGuesses(pixelHeight) {
   return Math.floor(pixelHeight / 2);
 }
@@ -19,7 +17,7 @@ export function normalizeGuess(value) {
   return typeof value === 'string' ? value.trim().toLowerCase() : '';
 }
 
-export function submitGuess(round, rawGuess) {
+export function submitGuess(round, rawGuess, allowedGuesses) {
   if (round.status !== 'playing') {
     return { outcome: 'finished', state: round };
   }

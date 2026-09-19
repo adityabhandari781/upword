@@ -19,7 +19,8 @@ desktop and mobile browsers.
   dependencies.
 - Canvas 2D for the word image, using a small built-in bitmap glyph map so the
   pixel style and image height are deterministic.
-- A JavaScript module containing the bundled fixed dictionary.
+- Bundled text files containing a curated answer list and a larger allowed-guess
+  list, loaded by a small JavaScript module.
 - `uv` only supplies a local static-file server; it is not part of the app.
 - Node's built-in test runner for pure game-rule tests.
 
@@ -45,7 +46,8 @@ css/style.css       # Responsive layout and visual states
 package.json        # ES module metadata and test script
 js/app.js           # DOM wiring, canvas drawing, and round rendering
 js/game.js          # Pure round state and validation rules
-js/words.js         # Fixed allowed-answer and allowed-guess word lists
+data/                # Fixed answer and allowed-guess word lists
+js/words.js         # Loads the bundled word lists
 js/glyphs.js        # Bitmap glyph definitions used to draw pixel words
 tests/game.test.js  # Node tests for round rules
 SPEC.md             # This agreed MVP contract
@@ -94,8 +96,7 @@ export function maxWrongGuesses(pixelHeight) {
    wrong-guess attempt; it gives no per-letter result.
 4. A correct valid guess ends the round as a win without revealing another row.
 5. The loss limit is `floor(pixelHeight / 2)` valid wrong guesses; when a round
-   ends, the answer and its fully revealed pixel canvas are displayed, with a
-   new-round control available.
+   ends, its pixel canvas is fully revealed, with a new-round control available.
 6. The game works with keyboard input and at narrow mobile widths, with visible
    controls and outcome messages available to assistive technologies.
 7. `node --test tests/game.test.js` passes.
