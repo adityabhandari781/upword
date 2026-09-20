@@ -1,6 +1,11 @@
 import { allowedGuesses, answerWords } from './words.js';
 import { createRound, submitGuess } from './game.js';
-import { createDisplayWord, drawPixelWord, wordDimensions } from './glyphs.js';
+import {
+  GLYPH_HEIGHT,
+  createDisplayWord,
+  drawPixelWord,
+  wordDimensions,
+} from './glyphs.js';
 
 const canvas = document.querySelector('#word-canvas');
 const context = canvas.getContext('2d');
@@ -21,6 +26,11 @@ const settings = {
 
 let round;
 let displayWord;
+
+function setStatus(message, isCorrect = false) {
+  status.textContent = message;
+  status.classList.toggle('is-correct', isCorrect);
+}
 
 function chooseAnswer() {
   return answerWords[Math.floor(Math.random() * answerWords.length)];
@@ -46,12 +56,12 @@ function showRound() {
 function startRound() {
   const answer = chooseAnswer();
   displayWord = createDisplayWord(answer, settings.letterCase);
-  round = createRound({ answer, pixelHeight: 7 });
-  status.textContent = settings.revealDirection === 'top-down'
+  round = createRound({ answer, pixelHeight: GLYPH_HEIGHT });
+  setStatus(settings.revealDirection === 'top-down'
     ? 'The top row is your first clue.'
     : settings.revealDirection === 'ends-to-center'
       ? 'The top and bottom rows are your first clues.'
-      : 'The bottom row is your first clue.';
+      : 'The bottom row is your first clue.');
   input.value = '';
   showRound();
   input.focus();
@@ -68,21 +78,21 @@ form.addEventListener('submit', (event) => {
   round = result.state;
 
   if (result.outcome === 'invalid') {
-    status.textContent = input.value.trim()
+    setStatus(input.value.trim()
       ? 'That is not an allowed dictionary word.'
-      : 'Enter a dictionary word to reveal a row.';
+      : 'Enter a dictionary word to reveal a row.');
     input.select();
     return;
   }
 
   if (result.outcome === 'correct') {
-    status.textContent = 'Correct! You found the hidden word!';
+    setStatus('Correct! You found the hidden word!', true);
   } else if (result.outcome === 'lost') {
-    status.textContent = 'The full word is now revealed.';
+    setStatus('The full word is now revealed.');
   } else {
-    status.textContent = settings.revealDirection === 'ends-to-center'
+    setStatus(settings.revealDirection === 'ends-to-center'
       ? 'Not quite. The next outer rows are visible.'
-      : 'Not quite. One more row is visible.';
+      : 'Not quite. One more row is visible.');
   }
 
   input.value = '';

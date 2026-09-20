@@ -138,6 +138,11 @@ h2 {
   color: var(--muted);
 }
 
+.status.is-correct {
+  color: #00ff00;
+  font-weight: 800;
+}
+
 .settings-button {
   position: absolute;
   top: 1rem;
