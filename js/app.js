@@ -1,6 +1,6 @@
 import { allowedGuesses, answerWords } from './words.js';
 import { createRound, submitGuess } from './game.js';
-import { drawPixelWord, wordDimensions } from './glyphs.js';
+import { createDisplayWord, drawPixelWord, wordDimensions } from './glyphs.js';
 
 const canvas = document.querySelector('#word-canvas');
 const context = canvas.getContext('2d');
@@ -9,8 +9,18 @@ const input = document.querySelector('#guess');
 const status = document.querySelector('#status');
 const attempts = document.querySelector('#attempts');
 const newRoundButton = document.querySelector('#new-round');
+const settingsButton = document.querySelector('#settings-button');
+const settingsDialog = document.querySelector('#settings-dialog');
+const settingsForm = document.querySelector('#settings-form');
+const settingsCancel = document.querySelector('#settings-cancel');
+
+const settings = {
+  revealDirection: 'bottom-up',
+  letterCase: 'uppercase',
+};
 
 let round;
+let displayWord;
 
 function chooseAnswer() {
   return answerWords[Math.floor(Math.random() * answerWords.length)];
@@ -20,7 +30,9 @@ function drawRound() {
   const dimensions = wordDimensions(round.answer);
   canvas.width = dimensions.width;
   canvas.height = dimensions.height;
-  drawPixelWord(context, round.answer, round.revealedRows);
+  drawPixelWord(context, displayWord, round.revealedRows, {
+    revealDirection: settings.revealDirection,
+  });
 }
 
 function showRound() {
@@ -32,11 +44,20 @@ function showRound() {
 }
 
 function startRound() {
-  round = createRound({ answer: chooseAnswer(), pixelHeight: 7 });
-  status.textContent = 'The bottom row is your first clue.';
+  const answer = chooseAnswer();
+  displayWord = createDisplayWord(answer, settings.letterCase);
+  round = createRound({ answer, pixelHeight: 7 });
+  status.textContent = settings.revealDirection === 'top-down'
+    ? 'The top row is your first clue.'
+    : 'The bottom row is your first clue.';
   input.value = '';
   showRound();
   input.focus();
+}
+
+function syncSettingsForm() {
+  settingsForm.querySelector(`[name="reveal-direction"][value="${settings.revealDirection}"]`).checked = true;
+  settingsForm.querySelector(`[name="letter-case"][value="${settings.letterCase}"]`).checked = true;
 }
 
 form.addEventListener('submit', (event) => {
@@ -69,4 +90,19 @@ form.addEventListener('submit', (event) => {
 });
 
 newRoundButton.addEventListener('click', startRound);
+settingsButton.addEventListener('click', () => {
+  syncSettingsForm();
+  settingsDialog.showModal();
+});
+
+settingsCancel.addEventListener('click', () => settingsDialog.close());
+
+settingsForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  settings.revealDirection = settingsForm.elements['reveal-direction'].value;
+  settings.letterCase = settingsForm.elements['letter-case'].value;
+  settingsDialog.close();
+  startRound();
+});
+
 startRound();

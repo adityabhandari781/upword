@@ -11,14 +11,16 @@ The player wins by guessing the word. They lose after `floor(pixelHeight / 2)`
 valid wrong guesses. During play, the image stays partially hidden; when a
 round ends, its full pixel word is revealed. Success is a player being able to
 start, play, win or lose, and immediately start a new random round on modern
-desktop and mobile browsers.
+desktop and mobile browsers. A settings control provides bottom-up (default) or
+top-down reveal direction and uppercase (default), lowercase, or mixed display
+casing for the next puzzle.
 
 ## Tech Stack
 
 - Static HTML, CSS, and ES modules; no application framework or runtime
   dependencies.
-- Canvas 2D for the word image, using a small built-in bitmap glyph map so the
-  pixel style and image height are deterministic.
+- Canvas 2D for the word image, using built-in uppercase and lowercase bitmap
+  glyph maps so the pixel style and image height are deterministic.
 - Bundled text files containing a curated answer list and a larger allowed-guess
   list, loaded by a small JavaScript module.
 - `uv` only supplies a local static-file server; it is not part of the app.
@@ -48,7 +50,7 @@ js/app.js           # DOM wiring, canvas drawing, and round rendering
 js/game.js          # Pure round state and validation rules
 data/                # Fixed answer and allowed-guess word lists
 js/words.js         # Loads the bundled word lists
-js/glyphs.js        # Bitmap glyph definitions used to draw pixel words
+js/glyphs.js        # Bitmap glyph definitions and rendering modes
 tests/game.test.js  # Node tests for round rules
 SPEC.md             # This agreed MVP contract
 ```
@@ -72,8 +74,9 @@ export function maxWrongGuesses(pixelHeight) {
   `node:test` and `node:assert/strict`; no test dependency is needed.
 - Test acceptance/rejection of guesses, correct-guess wins, wrong guesses
   increment the revealed-row count by one, and a loss at the half-height limit.
+- Test top-down and bottom-up row selection and stable mixed-case display words.
 - Manually verify the canvas reveal moves bottom-to-top and that keyboard-only
-  and narrow-screen play work.
+  and narrow-screen play work, including the settings dialog.
 
 ## Boundaries
 
@@ -81,7 +84,7 @@ export function maxWrongGuesses(pixelHeight) {
   list; preserve accessible labels, focus behavior, and live win/loss feedback;
   run the rule tests before a change is considered complete.
 - Ask first: add a dependency or framework; add persistence, a backend,
-  accounts, analytics, a daily/shared puzzle, or alternate font modes.
+  accounts, analytics, or a daily/shared puzzle.
 - Never: show green/yellow/gray letter feedback; reveal more than half of the
   image rows during a normal round; put secrets or external API keys in the
   client.
@@ -99,8 +102,10 @@ export function maxWrongGuesses(pixelHeight) {
    ends, its pixel canvas is fully revealed, with a new-round control available.
 6. The game works with keyboard input and at narrow mobile widths, with visible
    controls and outcome messages available to assistive technologies.
-7. `node --test tests/game.test.js` passes.
+7. Settings can select reveal direction and display casing, and those choices
+   apply to the next puzzle without changing the answer-validation rules.
+8. `npm test` passes.
 
 ## Open Questions
 
-None for the MVP. Font selection is explicitly a later game-mode feature.
+None for this feature.

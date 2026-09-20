@@ -2,7 +2,7 @@ export const GLYPH_WIDTH = 5;
 export const GLYPH_HEIGHT = 7;
 export const PIXEL_SIZE = 12;
 
-const glyphs = {
+const uppercaseGlyphs = {
   a: ['.###.', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
   b: ['####.', '#...#', '#...#', '####.', '#...#', '#...#', '####.'],
   c: ['.####', '#....', '#....', '#....', '#....', '#....', '.####'],
@@ -31,6 +31,35 @@ const glyphs = {
   z: ['#####', '....#', '...#.', '..#..', '.#...', '#....', '#####'],
 };
 
+const lowercaseGlyphs = {
+  a: ['.....', '.###.', '....#', '.####', '#...#', '#...#', '.####'],
+  b: ['#....', '#....', '#....', '#.##.', '##..#', '#...#', '####.'],
+  c: ['.....', '.####', '#....', '#....', '#....', '#....', '.####'],
+  d: ['....#', '....#', '....#', '.####', '#...#', '#...#', '.####'],
+  e: ['.....', '.###.', '#...#', '#####', '#....', '#....', '.####'],
+  f: ['..##.', '.#..#', '.#...', '####.', '.#...', '.#...', '.#...'],
+  g: ['.....', '.####', '#...#', '#...#', '.####', '....#', '.###.'],
+  h: ['#....', '#....', '#....', '####.', '#...#', '#...#', '#...#'],
+  i: ['..#..', '.....', '.##..', '..#..', '..#..', '..#..', '.###.'],
+  j: ['...#.', '.....', '...#.', '...#.', '...#.', '#..#.', '.##..'],
+  k: ['#....', '#....', '#....', '#..##', '#.#..', '##...', '#..##'],
+  l: ['.##..', '..#..', '..#..', '..#..', '..#..', '..#..', '.###.'],
+  m: ['.....', '##.##', '#.#.#', '#.#.#', '#.#.#', '#.#.#', '#.#.#'],
+  n: ['.....', '####.', '#...#', '#...#', '#...#', '#...#', '#...#'],
+  o: ['.....', '.###.', '#...#', '#...#', '#...#', '#...#', '.###.'],
+  p: ['.....', '####.', '#...#', '#...#', '####.', '#....', '#....'],
+  q: ['.....', '.####', '#...#', '#...#', '.####', '....#', '....#'],
+  r: ['.....', '#.##.', '##..#', '#....', '#....', '#....', '#....'],
+  s: ['.....', '.####', '#....', '.###.', '....#', '....#', '####.'],
+  t: ['.#...', '.#...', '####.', '.#...', '.#...', '.#..#', '.##..'],
+  u: ['.....', '#...#', '#...#', '#...#', '#...#', '#...#', '.####'],
+  v: ['.....', '#...#', '#...#', '#...#', '#...#', '.#.#.', '..#..'],
+  w: ['.....', '#...#', '#...#', '#.#.#', '#.#.#', '##.##', '#...#'],
+  x: ['.....', '#...#', '.#.#.', '..#..', '.#.#.', '#...#', '#...#'],
+  y: ['.....', '#...#', '#...#', '.####', '....#', '....#', '.###.'],
+  z: ['.....', '#####', '...#.', '..#..', '.#...', '#....', '#####'],
+};
+
 export function wordDimensions(word, pixelSize = PIXEL_SIZE) {
   const logicalWidth = word.length * (GLYPH_WIDTH + 1) - 1;
   return {
@@ -39,9 +68,30 @@ export function wordDimensions(word, pixelSize = PIXEL_SIZE) {
   };
 }
 
-export function drawPixelWord(context, word, revealedRows, pixelSize = PIXEL_SIZE) {
+export function createDisplayWord(word, letterCase = 'uppercase', random = Math.random) {
+  return [...word].map((letter) => {
+    if (letterCase === 'lowercase') return letter.toLowerCase();
+    if (letterCase === 'mixed') {
+      return random() < 0.5 ? letter.toUpperCase() : letter.toLowerCase();
+    }
+    return letter.toUpperCase();
+  }).join('');
+}
+
+export function drawPixelWord(
+  context,
+  word,
+  revealedRows,
+  { pixelSize = PIXEL_SIZE, revealDirection = 'bottom-up' } = {},
+) {
   const dimensions = wordDimensions(word, pixelSize);
-  const firstVisibleRow = GLYPH_HEIGHT - revealedRows;
+  const visibleRows = Math.max(0, Math.min(GLYPH_HEIGHT, revealedRows));
+  const firstVisibleRow = revealDirection === 'top-down'
+    ? 0
+    : GLYPH_HEIGHT - visibleRows;
+  const lastVisibleRow = revealDirection === 'top-down'
+    ? visibleRows
+    : GLYPH_HEIGHT;
 
   context.imageSmoothingEnabled = false;
   context.fillStyle = '#12202d';
@@ -49,10 +99,12 @@ export function drawPixelWord(context, word, revealedRows, pixelSize = PIXEL_SIZ
   context.fillStyle = '#f5b642';
 
   for (let letterIndex = 0; letterIndex < word.length; letterIndex += 1) {
-    const glyph = glyphs[word[letterIndex]];
+    const letter = word[letterIndex];
+    const glyphSet = letter === letter.toUpperCase() ? uppercaseGlyphs : lowercaseGlyphs;
+    const glyph = glyphSet[letter.toLowerCase()];
     const xOffset = letterIndex * (GLYPH_WIDTH + 1) * pixelSize;
 
-    for (let row = Math.max(0, firstVisibleRow); row < GLYPH_HEIGHT; row += 1) {
+    for (let row = firstVisibleRow; row < lastVisibleRow; row += 1) {
       for (let column = 0; column < GLYPH_WIDTH; column += 1) {
         if (glyph[row][column] === '#') {
           context.fillRect(

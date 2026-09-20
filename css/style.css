@@ -87,6 +87,7 @@ h2 {
 }
 
 .game-card {
+  position: relative;
   padding: clamp(1rem, 4vw, 2rem);
   border: 1px solid var(--line);
   border-radius: 1rem;
@@ -100,6 +101,7 @@ h2 {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  padding-right: 3rem;
 }
 
 .card-heading h2 {
@@ -134,6 +136,99 @@ h2 {
   min-height: 1.5rem;
   margin: 1rem 0 0.25rem;
   color: var(--muted);
+}
+
+.settings-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.settings-button:hover {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.settings-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+
+.settings-dialog {
+  width: min(calc(100% - 2rem), 26rem);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.85rem;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 1rem 3rem rgb(18 32 45 / 0.2);
+}
+
+.settings-dialog::backdrop {
+  background: rgb(18 32 45 / 0.45);
+}
+
+.settings-dialog form {
+  padding: 1.5rem;
+}
+
+.settings-dialog h2 {
+  margin-bottom: 0.25rem;
+}
+
+.settings-note {
+  margin-bottom: 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.settings-dialog fieldset {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+}
+
+.settings-dialog legend {
+  margin-bottom: 0.55rem;
+  font-weight: 800;
+}
+
+.settings-dialog label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.settings-dialog input[type="radio"] {
+  flex: 0 0 auto;
+  accent-color: var(--accent-dark);
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.settings-cancel {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.settings-cancel:hover {
+  background: var(--paper);
 }
 
 .guess-form label {
