@@ -148,3 +148,35 @@ display casing, reveal direction, and all game rules.
 
 - [x] The focused renderer check and complete test suite pass.
 - [ ] Pixel and Times New Roman work through the existing settings dialog.
+
+---
+
+## Task 5: Add Comic Sans font mode
+
+**Description:** Add Comic Sans as a smooth font option in the existing puzzle
+font settings. It uses the standard reveal bands, while Times New Roman keeps
+its custom 27px initial reveal and 6px increment.
+
+**Acceptance criteria:**
+
+- [x] The settings dialog offers Comic Sans alongside Pixel and Times New Roman.
+- [x] Comic Sans uses `"Comic Sans MS", "Comic Sans", cursive` and the standard
+  reveal bands.
+- [x] Pixel and Times New Roman behavior remains unchanged.
+
+**Verification:**
+
+- [x] Tests pass: `npm test`.
+- [x] Syntax check succeeds: `node --check js/glyphs.js && node --check js/app.js`.
+- [ ] Manual check: select Comic Sans and submit one valid wrong guess.
+
+**Dependencies:** Task 4
+
+**Files likely touched:**
+
+- `index.html`
+- `js/glyphs.js`
+- `js/app.js`
+- `tests/glyphs.test.js`
+
+**Estimated scope:** Medium (4 files)

@@ -3,6 +3,7 @@ import { createRound, submitGuess } from './game.js';
 import {
   GLYPH_HEIGHT,
   createDisplayWord,
+  drawComicSansWord,
   drawPixelWord,
   drawTimesNewRomanWord,
   wordDimensions,
@@ -44,7 +45,9 @@ function drawRound() {
   canvas.height = dimensions.height;
   const drawWord = settings.fontMode === 'times-new-roman'
     ? drawTimesNewRomanWord
-    : drawPixelWord;
+    : settings.fontMode === 'comic-sans'
+      ? drawComicSansWord
+      : drawPixelWord;
   drawWord(context, displayWord, round.revealedRows, {
     revealDirection: settings.revealDirection,
   });

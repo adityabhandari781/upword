@@ -14,21 +14,21 @@ play, win or lose, and immediately start a new random round on modern desktop
 and mobile browsers. A settings control provides bottom-up (default), top-down,
 or ends-to-center reveal direction; uppercase (default), lowercase, or mixed
 display casing; and a puzzle font mode for the next puzzle. The default
-`Pixel` mode retains the bitmap glyph rendering. The initial additional mode,
-`Times New Roman`, renders ordinary smooth serif text using the browser font
-stack `"Times New Roman", Times, serif`. It initially reveals 27px and reveals
-an additional 6px after each valid wrong guess (per edge in ends-to-center
-mode); a completed round reveals the full word. Ends-to-center rounds allow two
-wrong guesses; other modes allow `floor(pixelHeight / 2)`.
+`Pixel` mode retains the bitmap glyph rendering. `Times New Roman` renders
+ordinary smooth serif text using `"Times New Roman", Times, serif`; it initially
+reveals 27px and reveals an additional 6px after each valid wrong guess (per
+edge in ends-to-center mode). `Comic Sans` renders smooth text using
+`"Comic Sans MS", "Comic Sans", cursive` and keeps the standard reveal bands.
+A completed round reveals the full word. Ends-to-center rounds allow two wrong
+guesses; other modes allow `floor(pixelHeight / 2)`.
 
 ## Tech Stack
 
 - Static HTML, CSS, and ES modules; no application framework or runtime
   dependencies.
 - Canvas 2D for the word image. Pixel mode uses built-in uppercase and
-  lowercase bitmap glyph maps; Times New Roman mode uses the browser-provided
-  `"Times New Roman", Times, serif` font stack. No font file or dependency is
-  loaded.
+  lowercase bitmap glyph maps; smooth modes use browser-provided font stacks.
+  No font file or dependency is loaded.
 - Bundled text files containing a curated answer list and a larger allowed-guess
   list, loaded by a small JavaScript module.
 - `uv` only supplies a local static-file server; it is not part of the app.
@@ -125,9 +125,12 @@ export function maxWrongGuesses(pixelHeight) {
    in `"Times New Roman", Times, serif`, initially clipped to 27px and expanded
    by 6px for each valid wrong guess. It uses the normal browser fallback when
    Times New Roman is not installed.
-10. `npm test` passes.
+10. Selecting `Comic Sans` displays the puzzle word as smooth text in
+    `"Comic Sans MS", "Comic Sans", cursive` and preserves the standard reveal
+    bands. It uses the normal browser fallback when Comic Sans is not installed.
+11. `npm test` passes.
 
 ## Open Questions
 
-None. Times New Roman is intentionally the only new font mode in this change;
-additional fonts can use the same simple selector later if needed.
+None. The selector intentionally contains only Pixel, Times New Roman, and
+Comic Sans; additional fonts can be added later if needed.

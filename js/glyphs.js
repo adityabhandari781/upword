@@ -496,6 +496,51 @@ export function createDisplayWord(word, letterCase = 'uppercase', random = Math.
   }).join('');
 }
 
+function drawSmoothWord(
+  context,
+  word,
+  visibleHeight,
+  {
+    pixelSize = PIXEL_SIZE,
+    revealDirection = 'bottom-up',
+    font,
+  } = {},
+) {
+  const dimensions = wordDimensions(word, pixelSize);
+  const clippedHeight = Math.max(0, Math.min(dimensions.height, visibleHeight));
+
+  context.imageSmoothingEnabled = true;
+  context.fillStyle = '#12202d';
+  context.fillRect(0, 0, dimensions.width, dimensions.height);
+  context.save();
+  context.beginPath();
+
+  if (revealDirection === 'ends-to-center') {
+    context.rect(0, 0, dimensions.width, clippedHeight);
+    context.rect(
+      0,
+      dimensions.height - clippedHeight,
+      dimensions.width,
+      clippedHeight,
+    );
+  } else {
+    const y = revealDirection === 'top-down'
+      ? 0
+      : dimensions.height - clippedHeight;
+    context.rect(0, y, dimensions.width, clippedHeight);
+  }
+
+  context.clip();
+  context.fillStyle = '#f5b642';
+  context.font = `${pixelSize * 6}px ${font}`;
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  context.fillText(word, dimensions.width / 2, dimensions.height / 2);
+  context.restore();
+
+  return dimensions;
+}
+
 export function drawTimesNewRomanWord(
   context,
   word,
@@ -505,41 +550,28 @@ export function drawTimesNewRomanWord(
   const dimensions = wordDimensions(word, pixelSize);
   const visibleHeight = revealedRows >= GLYPH_HEIGHT
     ? dimensions.height
-    : Math.min(
-      dimensions.height,
-      TIMES_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * TIMES_REVEAL_INCREMENT,
-    );
+    : TIMES_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * TIMES_REVEAL_INCREMENT;
 
-  context.imageSmoothingEnabled = true;
-  context.fillStyle = '#12202d';
-  context.fillRect(0, 0, dimensions.width, dimensions.height);
-  context.save();
-  context.beginPath();
+  return drawSmoothWord(context, word, visibleHeight, {
+    pixelSize,
+    revealDirection,
+    font: '"Times New Roman", Times, serif',
+  });
+}
 
-  if (revealDirection === 'ends-to-center') {
-    context.rect(0, 0, dimensions.width, visibleHeight);
-    context.rect(
-      0,
-      dimensions.height - visibleHeight,
-      dimensions.width,
-      visibleHeight,
-    );
-  } else {
-    const y = revealDirection === 'top-down'
-      ? 0
-      : dimensions.height - visibleHeight;
-    context.rect(0, y, dimensions.width, visibleHeight);
-  }
+export function drawComicSansWord(
+  context,
+  word,
+  revealedRows,
+  { pixelSize = PIXEL_SIZE, revealDirection = 'bottom-up' } = {},
+) {
+  const visibleRows = Math.max(0, Math.min(GLYPH_HEIGHT, revealedRows));
 
-  context.clip();
-  context.fillStyle = '#f5b642';
-  context.font = `${pixelSize * 6}px "Times New Roman", Times, serif`;
-  context.textAlign = 'center';
-  context.textBaseline = 'middle';
-  context.fillText(word, dimensions.width / 2, dimensions.height / 2);
-  context.restore();
-
-  return dimensions;
+  return drawSmoothWord(context, word, visibleRows * pixelSize, {
+    pixelSize,
+    revealDirection,
+    font: '"Comic Sans MS", "Comic Sans", cursive',
+  });
 }
 
 export function drawPixelWord(

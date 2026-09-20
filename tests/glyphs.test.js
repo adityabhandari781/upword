@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   createDisplayWord,
+  drawComicSansWord,
   drawPixelWord,
   drawTimesNewRomanWord,
 } from '../js/glyphs.js';
@@ -137,4 +138,20 @@ test('Times New Roman reveals 27 pixels from both ends in ends-to-center mode', 
     [0, 0, 348, 27],
     [0, 57, 348, 27],
   ]);
+});
+
+test('Comic Sans uses the standard reveal bands', () => {
+  const initialContext = createTextContext();
+  const afterWrongGuessContext = createTextContext();
+
+  const dimensions = drawComicSansWord(initialContext, 'CABIN', 1, {
+    pixelSize: 12,
+  });
+  drawComicSansWord(afterWrongGuessContext, 'CABIN', 2, {
+    pixelSize: 12,
+  });
+
+  assert.deepEqual(initialContext.clipRects, [[0, 72, dimensions.width, 12]]);
+  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 60, dimensions.width, 24]]);
+  assert.match(initialContext.font, /Comic Sans/);
 });
