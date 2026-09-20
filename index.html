@@ -32,7 +32,7 @@
         </div>
 
         <div class="canvas-frame">
-          <canvas id="word-canvas" role="img" aria-label="Partially revealed pixel word"></canvas>
+          <canvas id="word-canvas" role="img" aria-label="Partially revealed word"></canvas>
         </div>
 
         <p id="status" class="status" aria-live="polite">The bottom row is your first clue.</p>
@@ -66,6 +66,12 @@
           <label><input type="radio" name="letter-case" value="uppercase" checked> CAPITAL LETTERS</label>
           <label><input type="radio" name="letter-case" value="lowercase"> lowercase letters</label>
           <label><input type="radio" name="letter-case" value="mixed"> Mixed case</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Puzzle font</legend>
+          <label><input type="radio" name="font-mode" value="pixel" checked> Pixel</label>
+          <label><input type="radio" name="font-mode" value="times-new-roman"> Times New Roman</label>
         </fieldset>
 
         <div class="settings-actions">

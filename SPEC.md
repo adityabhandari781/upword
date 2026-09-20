@@ -9,19 +9,24 @@ the next row upward; no Wordle-style letter feedback is shown.
 
 The player wins by guessing the word. They lose after `floor(pixelHeight / 2)`
 valid wrong guesses. During play, the image stays partially hidden; when a
-round ends, its full pixel word is revealed. Success is a player being able to
-start, play, win or lose, and immediately start a new random round on modern
-desktop and mobile browsers. A settings control provides bottom-up (default),
-top-down, or ends-to-center reveal direction and uppercase (default), lowercase,
-or mixed display casing for the next puzzle. Ends-to-center rounds allow two
-wrong guesses; other modes allow `floor(pixelHeight / 2)`.
+round ends, its full word is revealed. Success is a player being able to start,
+play, win or lose, and immediately start a new random round on modern desktop
+and mobile browsers. A settings control provides bottom-up (default), top-down,
+or ends-to-center reveal direction; uppercase (default), lowercase, or mixed
+display casing; and a puzzle font mode for the next puzzle. The default
+`Pixel` mode retains the bitmap glyph rendering. The initial additional mode,
+`Times New Roman`, renders ordinary smooth serif text using the browser font
+stack `"Times New Roman", Times, serif`. Ends-to-center rounds allow two wrong
+guesses; other modes allow `floor(pixelHeight / 2)`.
 
 ## Tech Stack
 
 - Static HTML, CSS, and ES modules; no application framework or runtime
   dependencies.
-- Canvas 2D for the word image, using built-in uppercase and lowercase bitmap
-  glyph maps so the pixel style and image height are deterministic.
+- Canvas 2D for the word image. Pixel mode uses built-in uppercase and
+  lowercase bitmap glyph maps; Times New Roman mode uses the browser-provided
+  `"Times New Roman", Times, serif` font stack. No font file or dependency is
+  loaded.
 - Bundled text files containing a curated answer list and a larger allowed-guess
   list, loaded by a small JavaScript module.
 - `uv` only supplies a local static-file server; it is not part of the app.
@@ -51,8 +56,9 @@ js/app.js           # DOM wiring, canvas drawing, and round rendering
 js/game.js          # Pure round state and validation rules
 data/                # Fixed answer and allowed-guess word lists
 js/words.js         # Loads the bundled word lists
-js/glyphs.js        # Bitmap glyph definitions and rendering modes
+js/glyphs.js        # Pixel glyph definitions plus canvas word renderers
 tests/game.test.js  # Node tests for round rules
+tests/glyphs.test.js # Node tests for bitmap and canvas renderers
 SPEC.md             # This agreed MVP contract
 ```
 
@@ -61,7 +67,8 @@ SPEC.md             # This agreed MVP contract
 Use small ES modules, `const` by default, lower-camel-case identifiers, and
 pure functions for game rules. Keep rendering and DOM access in `app.js`; do
 not duplicate rule checks in the UI. User-entered guesses are normalized with
-`trim().toLowerCase()` before validation.
+`trim().toLowerCase()` before validation. Use a string mode value rather than a
+font registry until another font is requested.
 
 ```js
 export function maxWrongGuesses(pixelHeight) {
@@ -76,6 +83,9 @@ export function maxWrongGuesses(pixelHeight) {
 - Test acceptance/rejection of guesses, correct-guess wins, wrong guesses
   increment the revealed-row count by one, and a loss at the half-height limit.
 - Test all reveal directions and stable mixed-case display words.
+- Add a small renderer-selection test proving that `Pixel` remains the default
+  and `Times New Roman` uses the smooth-text renderer with the existing seven
+  logical reveal bands.
 - Manually verify the canvas reveal moves bottom-to-top and that keyboard-only
   and narrow-screen play work, including the settings dialog.
 
@@ -83,7 +93,9 @@ export function maxWrongGuesses(pixelHeight) {
 
 - Always: validate every submitted guess against the bundled allowed-guess
   list; preserve accessible labels, focus behavior, and live win/loss feedback;
-  run the rule tests before a change is considered complete.
+  run the rule tests before a change is considered complete; keep the same
+  seven logical reveal bands and attempt limits in every currently supported
+  font mode.
 - Ask first: add a dependency or framework; add persistence, a backend,
   accounts, analytics, or a daily/shared puzzle.
 - Never: show green/yellow/gray letter feedback; reveal more than half of the
@@ -103,10 +115,18 @@ export function maxWrongGuesses(pixelHeight) {
    ends, its pixel canvas is fully revealed, with a new-round control available.
 6. The game works with keyboard input and at narrow mobile widths, with visible
    controls and outcome messages available to assistive technologies.
-7. Settings can select reveal direction and display casing, and those choices
-   apply to the next puzzle without changing the answer-validation rules.
-8. `npm test` passes.
+7. Settings can select reveal direction, display casing, and a puzzle font;
+   those choices apply to the next puzzle without changing answer-validation,
+   reveal direction, or attempt-limit rules.
+8. `Pixel` is selected by default and displays the existing bitmap word exactly
+   as before.
+9. Selecting `Times New Roman` displays the puzzle word as smooth serif text
+   in `"Times New Roman", Times, serif`, clipped into the existing seven
+   logical reveal bands. It uses the normal browser fallback when Times New
+   Roman is not installed.
+10. `npm test` passes.
 
 ## Open Questions
 
-None for this feature.
+None. Times New Roman is intentionally the only new font mode in this change;
+additional fonts can use the same simple selector later if needed.

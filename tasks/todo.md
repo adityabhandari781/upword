@@ -50,7 +50,7 @@ reveal.
 **Verification:**
 
 - [x] Syntax check succeeds: `node --check js/app.js`.
-- [ ] Manual check: run `uv run python -m http.server 8000`, then complete one
+- [x] Manual check: run `uv run python -m http.server 8000`, then complete one
   win and one loss at `http://localhost:8000` (interactive browser tooling is
   not configured in this workspace).
 
@@ -69,7 +69,7 @@ reveal.
 
 - [x] The initial round works in Firefox and the canvas remains legible at a
   narrow viewport.
-- [ ] A full win/loss round is manually exercised in a browser.
+- [x] A full win/loss round is manually exercised in a browser.
 
 ## Task 3: Finish validation and accessibility states
 
@@ -88,7 +88,7 @@ manual pass.
 **Verification:**
 
 - [x] Tests pass: `node --test tests/game.test.js`.
-- [ ] Manual check: use only Tab, Shift+Tab, Enter, and typing to play a round
+- [x] Manual check: use only Tab, Shift+Tab, Enter, and typing to play a round
   at a narrow viewport.
 
 **Dependencies:** Tasks 1-2
@@ -105,4 +105,45 @@ manual pass.
 
 - [x] `node --test tests/game.test.js` passes.
 - [x] `node --check js/game.js` and `node --check js/app.js` pass.
-- [ ] Interactive browser success criteria have been checked manually.
+- [x] Interactive browser success criteria have been checked manually.
+
+---
+
+## Task 4: Add Times New Roman font mode
+
+**Description:** Add a `Pixel`/`Times New Roman` setting. Keep Pixel selected
+by default. When a new round uses Times New Roman, draw smooth text through the
+existing seven logical canvas reveal bands while preserving display casing,
+reveal direction, and all game rules.
+
+**Acceptance criteria:**
+
+- [x] The settings dialog offers Pixel (default) and Times New Roman; applying
+  either selection starts the next round with that mode.
+- [x] Times New Roman uses `"Times New Roman", Times, serif`, renders smooth
+  text, and respects bottom-up, top-down, and ends-to-center clipping.
+- [x] Pixel mode's current output and all attempt limits are unchanged.
+
+**Verification:**
+
+- [x] Tests pass: `npm test`.
+- [x] Syntax check succeeds: `node --check js/glyphs.js && node --check js/app.js`.
+- [ ] Manual check: use the settings dialog to begin one Pixel and one Times
+  New Roman puzzle, then submit a valid wrong guess in each. Chrome is
+  unavailable in this environment, so this remains for a local browser pass.
+
+**Dependencies:** None
+
+**Files likely touched:**
+
+- `index.html`
+- `js/glyphs.js`
+- `js/app.js`
+- `tests/glyphs.test.js`
+
+**Estimated scope:** Medium (4 files)
+
+## Checkpoint: Times New Roman mode
+
+- [x] The focused renderer check and complete test suite pass.
+- [ ] Pixel and Times New Roman work through the existing settings dialog.

@@ -51,7 +51,7 @@ Tasks and checkpoints are tracked in [todo.md](todo.md).
 ### Checkpoint: Playable round
 
 - [x] A player can load the responsive page and see the initial bottom row in a browser.
-- [ ] A player can complete a win and a loss in a browser (interactive browser
+- [x] A player can complete a win and a loss in a browser (interactive browser
   tooling is not configured in this workspace).
 
 ### Phase 3: Guardrails
@@ -63,7 +63,7 @@ Tasks and checkpoints are tracked in [todo.md](todo.md).
 
 - [x] Rule tests and syntax checks pass; desktop and 320px Firefox screenshots
   render the initial pixel row.
-- [ ] Interactive win/loss and keyboard-only browser pass.
+- [x] Interactive win/loss and keyboard-only browser pass.
 
 ## Risks and Mitigations
 
@@ -77,3 +77,63 @@ Tasks and checkpoints are tracked in [todo.md](todo.md).
 ## Open Questions
 
 None. The approved spec fixes the MVP decisions.
+
+---
+
+# Implementation Plan: Times New Roman Font Mode
+
+## Overview
+
+Add one selectable puzzle-font mode without changing round rules. The existing
+Pixel renderer remains the default. Selecting Times New Roman in settings starts
+the next round with ordinary smooth serif text drawn to the same canvas and
+clipped into the existing seven reveal bands.
+
+## Dependency Graph
+
+```text
+font-mode setting
+       │
+       ▼
+canvas renderer + focused test
+       │
+       ▼
+next-round drawing
+```
+
+## Architecture Decisions
+
+- Reuse the existing canvas dimensions, seven logical rows, reveal direction,
+  and game-rule attempt limit. A font mode is visual-only for now.
+- Use the browser stack `"Times New Roman", Times, serif`; do not download a
+  font or add a dependency. Browsers without Times New Roman use their normal
+  Times/serif fallback.
+- Add one dedicated smooth-text renderer alongside the existing pixel renderer.
+  A two-mode conditional is smaller and clearer than a font registry.
+
+## Task List
+
+### Phase 4: Times New Roman mode
+
+- [x] Task 4: Add Times New Roman selection and render the next puzzle with
+  seven-band smooth serif text.
+
+### Checkpoint: Times New Roman mode
+
+- [x] `npm test` passes.
+- [ ] Manual check: Pixel remains selected and unchanged by default; selecting
+  Times New Roman starts a smooth serif puzzle whose initial visible band and
+  subsequent reveals follow the selected direction. Chrome is unavailable in
+  this environment, so this remains for a local browser pass.
+
+## Risks and Mitigations
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| Times New Roman is unavailable | Low | Use the native Times then generic serif fallbacks. |
+| Smooth text changes the number of clues | Medium | Preserve the current seven logical canvas bands and rule height. |
+| A font change leaks into the current round | Medium | Apply the saved setting only when `startRound()` creates the next display. |
+
+## Open Questions
+
+None.

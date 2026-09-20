@@ -494,6 +494,47 @@ export function createDisplayWord(word, letterCase = 'uppercase', random = Math.
   }).join('');
 }
 
+export function drawTimesNewRomanWord(
+  context,
+  word,
+  revealedRows,
+  { pixelSize = PIXEL_SIZE, revealDirection = 'bottom-up' } = {},
+) {
+  const dimensions = wordDimensions(word, pixelSize);
+  const visibleRows = Math.max(0, Math.min(GLYPH_HEIGHT, revealedRows));
+
+  context.imageSmoothingEnabled = true;
+  context.fillStyle = '#12202d';
+  context.fillRect(0, 0, dimensions.width, dimensions.height);
+  context.save();
+  context.beginPath();
+
+  if (revealDirection === 'ends-to-center') {
+    context.rect(0, 0, dimensions.width, visibleRows * pixelSize);
+    context.rect(
+      0,
+      dimensions.height - visibleRows * pixelSize,
+      dimensions.width,
+      visibleRows * pixelSize,
+    );
+  } else {
+    const y = revealDirection === 'top-down'
+      ? 0
+      : dimensions.height - visibleRows * pixelSize;
+    context.rect(0, y, dimensions.width, visibleRows * pixelSize);
+  }
+
+  context.clip();
+  context.fillStyle = '#f5b642';
+  context.font = `${pixelSize * 6}px "Times New Roman", Times, serif`;
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  context.fillText(word, dimensions.width / 2, dimensions.height / 2);
+  context.restore();
+
+  return dimensions;
+}
+
 export function drawPixelWord(
   context,
   word,

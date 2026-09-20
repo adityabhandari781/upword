@@ -4,6 +4,7 @@ import {
   GLYPH_HEIGHT,
   createDisplayWord,
   drawPixelWord,
+  drawTimesNewRomanWord,
   wordDimensions,
 } from './glyphs.js';
 
@@ -22,6 +23,7 @@ const settingsCancel = document.querySelector('#settings-cancel');
 const settings = {
   revealDirection: 'bottom-up',
   letterCase: 'uppercase',
+  fontMode: 'pixel',
 };
 
 let round;
@@ -40,7 +42,10 @@ function drawRound() {
   const dimensions = wordDimensions(round.answer);
   canvas.width = dimensions.width;
   canvas.height = dimensions.height;
-  drawPixelWord(context, displayWord, round.revealedRows, {
+  const drawWord = settings.fontMode === 'times-new-roman'
+    ? drawTimesNewRomanWord
+    : drawPixelWord;
+  drawWord(context, displayWord, round.revealedRows, {
     revealDirection: settings.revealDirection,
   });
 }
@@ -74,6 +79,7 @@ function startRound() {
 function syncSettingsForm() {
   settingsForm.querySelector(`[name="reveal-direction"][value="${settings.revealDirection}"]`).checked = true;
   settingsForm.querySelector(`[name="letter-case"][value="${settings.letterCase}"]`).checked = true;
+  settingsForm.querySelector(`[name="font-mode"][value="${settings.fontMode}"]`).checked = true;
 }
 
 form.addEventListener('submit', (event) => {
@@ -119,6 +125,7 @@ settingsForm.addEventListener('submit', (event) => {
   event.preventDefault();
   settings.revealDirection = settingsForm.elements['reveal-direction'].value;
   settings.letterCase = settingsForm.elements['letter-case'].value;
+  settings.fontMode = settingsForm.elements['font-mode'].value;
   settingsDialog.close();
   startRound();
 });

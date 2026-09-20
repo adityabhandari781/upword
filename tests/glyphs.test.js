@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import {
   createDisplayWord,
   drawPixelWord,
+  drawTimesNewRomanWord,
 } from '../js/glyphs.js';
 
 function createContext() {
@@ -24,6 +25,31 @@ function filledRows(context, pixelSize = 1) {
       .filter(({ width, height }) => width === pixelSize && height === pixelSize)
       .map(({ y }) => y / pixelSize),
   );
+}
+
+function createTextContext() {
+  const clipRects = [];
+  const textFills = [];
+
+  return {
+    clipRects,
+    textFills,
+    fillStyle: '',
+    font: '',
+    textAlign: '',
+    textBaseline: '',
+    fillRect() {},
+    save() {},
+    restore() {},
+    beginPath() {},
+    rect(...args) {
+      clipRects.push(args);
+    },
+    clip() {},
+    fillText(...args) {
+      textFills.push(args);
+    },
+  };
 }
 
 test('reveals the bottom row by default and the top row in top-down mode', () => {
@@ -68,4 +94,41 @@ test('mixed casing is chosen once per display word', () => {
 test('case modes preserve the answer letters while changing display case', () => {
   assert.equal(createDisplayWord('cabin', 'uppercase'), 'CABIN');
   assert.equal(createDisplayWord('CABIN', 'lowercase'), 'cabin');
+});
+
+test('Times New Roman draws smooth text through the visible reveal bands', () => {
+  const context = createTextContext();
+  const topDownContext = createTextContext();
+
+  const dimensions = drawTimesNewRomanWord(context, 'CABIN', 1, {
+    pixelSize: 12,
+    revealDirection: 'bottom-up',
+  });
+  drawTimesNewRomanWord(topDownContext, 'CABIN', 1, {
+    pixelSize: 12,
+    revealDirection: 'top-down',
+  });
+
+  assert.equal(dimensions.height, 84);
+  assert.deepEqual(context.clipRects, [[0, 72, dimensions.width, 12]]);
+  assert.deepEqual(topDownContext.clipRects, [[0, 0, dimensions.width, 12]]);
+  assert.equal(context.textFills.length, 1);
+  assert.equal(context.textFills[0][0], 'CABIN');
+  assert.match(context.font, /Times New Roman/);
+  assert.equal(context.textAlign, 'center');
+  assert.equal(context.textBaseline, 'middle');
+});
+
+test('Times New Roman reveals both outer bands in ends-to-center mode', () => {
+  const context = createTextContext();
+
+  drawTimesNewRomanWord(context, 'CABIN', 1, {
+    pixelSize: 12,
+    revealDirection: 'ends-to-center',
+  });
+
+  assert.deepEqual(context.clipRects, [
+    [0, 0, 348, 12],
+    [0, 72, 348, 12],
+  ]);
 });
