@@ -49,7 +49,9 @@ function startRound() {
   round = createRound({ answer, pixelHeight: 7 });
   status.textContent = settings.revealDirection === 'top-down'
     ? 'The top row is your first clue.'
-    : 'The bottom row is your first clue.';
+    : settings.revealDirection === 'ends-to-center'
+      ? 'The top and bottom rows are your first clues.'
+      : 'The bottom row is your first clue.';
   input.value = '';
   showRound();
   input.focus();
@@ -78,7 +80,9 @@ form.addEventListener('submit', (event) => {
   } else if (result.outcome === 'lost') {
     status.textContent = 'The full word is now revealed.';
   } else {
-    status.textContent = 'Not quite. One more row is visible.';
+    status.textContent = settings.revealDirection === 'ends-to-center'
+      ? 'Not quite. The next outer rows are visible.'
+      : 'Not quite. One more row is visible.';
   }
 
   input.value = '';

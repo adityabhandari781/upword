@@ -11,9 +11,9 @@ The player wins by guessing the word. They lose after `floor(pixelHeight / 2)`
 valid wrong guesses. During play, the image stays partially hidden; when a
 round ends, its full pixel word is revealed. Success is a player being able to
 start, play, win or lose, and immediately start a new random round on modern
-desktop and mobile browsers. A settings control provides bottom-up (default) or
-top-down reveal direction and uppercase (default), lowercase, or mixed display
-casing for the next puzzle.
+desktop and mobile browsers. A settings control provides bottom-up (default),
+top-down, or ends-to-center reveal direction and uppercase (default), lowercase,
+or mixed display casing for the next puzzle.
 
 ## Tech Stack
 
@@ -74,7 +74,7 @@ export function maxWrongGuesses(pixelHeight) {
   `node:test` and `node:assert/strict`; no test dependency is needed.
 - Test acceptance/rejection of guesses, correct-guess wins, wrong guesses
   increment the revealed-row count by one, and a loss at the half-height limit.
-- Test top-down and bottom-up row selection and stable mixed-case display words.
+- Test all reveal directions and stable mixed-case display words.
 - Manually verify the canvas reveal moves bottom-to-top and that keyboard-only
   and narrow-screen play work, including the settings dialog.
 

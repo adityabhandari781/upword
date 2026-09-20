@@ -104,7 +104,13 @@ export function drawPixelWord(
     const glyph = glyphSet[letter.toLowerCase()];
     const xOffset = letterIndex * (GLYPH_WIDTH + 1) * pixelSize;
 
-    for (let row = firstVisibleRow; row < lastVisibleRow; row += 1) {
+    for (let row = 0; row < GLYPH_HEIGHT; row += 1) {
+      const rowIsVisible = revealDirection === 'ends-to-center'
+        ? row < visibleRows || row >= GLYPH_HEIGHT - visibleRows
+        : row >= firstVisibleRow && row < lastVisibleRow;
+
+      if (!rowIsVisible) continue;
+
       for (let column = 0; column < GLYPH_WIDTH; column += 1) {
         if (glyph[row][column] === '#') {
           context.fillRect(
