@@ -13,7 +13,8 @@ round ends, its full pixel word is revealed. Success is a player being able to
 start, play, win or lose, and immediately start a new random round on modern
 desktop and mobile browsers. A settings control provides bottom-up (default),
 top-down, or ends-to-center reveal direction and uppercase (default), lowercase,
-or mixed display casing for the next puzzle.
+or mixed display casing for the next puzzle. Ends-to-center rounds allow two
+wrong guesses; other modes allow `floor(pixelHeight / 2)`.
 
 ## Tech Stack
 

@@ -13,6 +13,22 @@ test('the wrong-guess limit is half the pixel height, rounded down', () => {
   assert.equal(maxWrongGuesses(8), 4);
 });
 
+test('a round can use a game-mode-specific wrong-guess limit', () => {
+  const round = createRound({
+    answer: 'cabin',
+    pixelHeight: 8,
+    wrongGuessLimit: 2,
+  });
+
+  const first = submitGuess(round, 'crane', allowedGuesses);
+  const second = submitGuess(first.state, 'caper', allowedGuesses);
+
+  assert.equal(round.maxWrongGuesses, 2);
+  assert.equal(first.outcome, 'wrong');
+  assert.equal(second.outcome, 'lost');
+  assert.equal(second.state.revealedRows, 8);
+});
+
 test('a round starts with one visible row and no attempts used', () => {
   const round = createRound({
     answer: 'cabin',

@@ -2,11 +2,11 @@ export function maxWrongGuesses(pixelHeight) {
   return Math.floor(pixelHeight / 2);
 }
 
-export function createRound({ answer, pixelHeight }) {
+export function createRound({ answer, pixelHeight, wrongGuessLimit = maxWrongGuesses(pixelHeight) }) {
   return {
     answer,
     pixelHeight,
-    maxWrongGuesses: maxWrongGuesses(pixelHeight),
+    maxWrongGuesses: wrongGuessLimit,
     wrongGuesses: 0,
     revealedRows: 1,
     status: 'playing',

@@ -56,7 +56,11 @@ function showRound() {
 function startRound() {
   const answer = chooseAnswer();
   displayWord = createDisplayWord(answer, settings.letterCase);
-  round = createRound({ answer, pixelHeight: GLYPH_HEIGHT });
+  round = createRound({
+    answer,
+    pixelHeight: GLYPH_HEIGHT,
+    wrongGuessLimit: settings.revealDirection === 'ends-to-center' ? 2 : undefined,
+  });
   setStatus(settings.revealDirection === 'top-down'
     ? 'The top row is your first clue.'
     : settings.revealDirection === 'ends-to-center'
