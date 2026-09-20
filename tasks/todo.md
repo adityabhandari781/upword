@@ -113,15 +113,16 @@ manual pass.
 
 **Description:** Add a `Pixel`/`Times New Roman` setting. Keep Pixel selected
 by default. When a new round uses Times New Roman, draw smooth text through the
-existing seven logical canvas reveal bands while preserving display casing,
-reveal direction, and all game rules.
+agreed 27px initial reveal, then add 6px per valid wrong guess while preserving
+display casing, reveal direction, and all game rules.
 
 **Acceptance criteria:**
 
 - [x] The settings dialog offers Pixel (default) and Times New Roman; applying
   either selection starts the next round with that mode.
 - [x] Times New Roman uses `"Times New Roman", Times, serif`, renders smooth
-  text, and respects bottom-up, top-down, and ends-to-center clipping.
+  text, starts at 27px, adds 6px per wrong guess, and respects bottom-up,
+  top-down, and ends-to-center clipping.
 - [x] Pixel mode's current output and all attempt limits are unchanged.
 
 **Verification:**

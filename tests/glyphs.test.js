@@ -96,9 +96,10 @@ test('case modes preserve the answer letters while changing display case', () =>
   assert.equal(createDisplayWord('CABIN', 'lowercase'), 'cabin');
 });
 
-test('Times New Roman draws smooth text through the visible reveal bands', () => {
+test('Times New Roman starts at 27 pixels and reveals 6 more after a wrong guess', () => {
   const context = createTextContext();
   const topDownContext = createTextContext();
+  const afterWrongGuessContext = createTextContext();
 
   const dimensions = drawTimesNewRomanWord(context, 'CABIN', 1, {
     pixelSize: 12,
@@ -108,10 +109,15 @@ test('Times New Roman draws smooth text through the visible reveal bands', () =>
     pixelSize: 12,
     revealDirection: 'top-down',
   });
+  drawTimesNewRomanWord(afterWrongGuessContext, 'CABIN', 2, {
+    pixelSize: 12,
+    revealDirection: 'bottom-up',
+  });
 
   assert.equal(dimensions.height, 84);
-  assert.deepEqual(context.clipRects, [[0, 72, dimensions.width, 12]]);
-  assert.deepEqual(topDownContext.clipRects, [[0, 0, dimensions.width, 12]]);
+  assert.deepEqual(context.clipRects, [[0, 57, dimensions.width, 27]]);
+  assert.deepEqual(topDownContext.clipRects, [[0, 0, dimensions.width, 27]]);
+  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 51, dimensions.width, 33]]);
   assert.equal(context.textFills.length, 1);
   assert.equal(context.textFills[0][0], 'CABIN');
   assert.match(context.font, /Times New Roman/);
@@ -119,7 +125,7 @@ test('Times New Roman draws smooth text through the visible reveal bands', () =>
   assert.equal(context.textBaseline, 'middle');
 });
 
-test('Times New Roman reveals both outer bands in ends-to-center mode', () => {
+test('Times New Roman reveals 27 pixels from both ends in ends-to-center mode', () => {
   const context = createTextContext();
 
   drawTimesNewRomanWord(context, 'CABIN', 1, {
@@ -128,7 +134,7 @@ test('Times New Roman reveals both outer bands in ends-to-center mode', () => {
   });
 
   assert.deepEqual(context.clipRects, [
-    [0, 0, 348, 12],
-    [0, 72, 348, 12],
+    [0, 0, 348, 27],
+    [0, 57, 348, 27],
   ]);
 });

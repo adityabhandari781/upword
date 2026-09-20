@@ -16,8 +16,10 @@ or ends-to-center reveal direction; uppercase (default), lowercase, or mixed
 display casing; and a puzzle font mode for the next puzzle. The default
 `Pixel` mode retains the bitmap glyph rendering. The initial additional mode,
 `Times New Roman`, renders ordinary smooth serif text using the browser font
-stack `"Times New Roman", Times, serif`. Ends-to-center rounds allow two wrong
-guesses; other modes allow `floor(pixelHeight / 2)`.
+stack `"Times New Roman", Times, serif`. It initially reveals 27px and reveals
+an additional 6px after each valid wrong guess (per edge in ends-to-center
+mode); a completed round reveals the full word. Ends-to-center rounds allow two
+wrong guesses; other modes allow `floor(pixelHeight / 2)`.
 
 ## Tech Stack
 
@@ -84,8 +86,8 @@ export function maxWrongGuesses(pixelHeight) {
   increment the revealed-row count by one, and a loss at the half-height limit.
 - Test all reveal directions and stable mixed-case display words.
 - Add a small renderer-selection test proving that `Pixel` remains the default
-  and `Times New Roman` uses the smooth-text renderer with the existing seven
-  logical reveal bands.
+  and `Times New Roman` starts at 27px, expands by 6px after a wrong guess, and
+  uses the smooth-text renderer.
 - Manually verify the canvas reveal moves bottom-to-top and that keyboard-only
   and narrow-screen play work, including the settings dialog.
 
@@ -93,9 +95,8 @@ export function maxWrongGuesses(pixelHeight) {
 
 - Always: validate every submitted guess against the bundled allowed-guess
   list; preserve accessible labels, focus behavior, and live win/loss feedback;
-  run the rule tests before a change is considered complete; keep the same
-  seven logical reveal bands and attempt limits in every currently supported
-  font mode.
+  run the rule tests before a change is considered complete; keep Pixel mode's
+  seven logical reveal bands and all attempt limits unchanged.
 - Ask first: add a dependency or framework; add persistence, a backend,
   accounts, analytics, or a daily/shared puzzle.
 - Never: show green/yellow/gray letter feedback; reveal more than half of the
@@ -121,9 +122,9 @@ export function maxWrongGuesses(pixelHeight) {
 8. `Pixel` is selected by default and displays the existing bitmap word exactly
    as before.
 9. Selecting `Times New Roman` displays the puzzle word as smooth serif text
-   in `"Times New Roman", Times, serif`, clipped into the existing seven
-   logical reveal bands. It uses the normal browser fallback when Times New
-   Roman is not installed.
+   in `"Times New Roman", Times, serif`, initially clipped to 27px and expanded
+   by 6px for each valid wrong guess. It uses the normal browser fallback when
+   Times New Roman is not installed.
 10. `npm test` passes.
 
 ## Open Questions

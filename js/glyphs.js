@@ -1,6 +1,8 @@
 export const GLYPH_WIDTH = 5;
 export const GLYPH_HEIGHT = 7;
 export const PIXEL_SIZE = 12;
+const TIMES_INITIAL_REVEAL_HEIGHT = 27;
+const TIMES_REVEAL_INCREMENT = 6;
 
 const uppercaseGlyphs = {
   a: [
@@ -501,7 +503,12 @@ export function drawTimesNewRomanWord(
   { pixelSize = PIXEL_SIZE, revealDirection = 'bottom-up' } = {},
 ) {
   const dimensions = wordDimensions(word, pixelSize);
-  const visibleRows = Math.max(0, Math.min(GLYPH_HEIGHT, revealedRows));
+  const visibleHeight = revealedRows >= GLYPH_HEIGHT
+    ? dimensions.height
+    : Math.min(
+      dimensions.height,
+      TIMES_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * TIMES_REVEAL_INCREMENT,
+    );
 
   context.imageSmoothingEnabled = true;
   context.fillStyle = '#12202d';
@@ -510,18 +517,18 @@ export function drawTimesNewRomanWord(
   context.beginPath();
 
   if (revealDirection === 'ends-to-center') {
-    context.rect(0, 0, dimensions.width, visibleRows * pixelSize);
+    context.rect(0, 0, dimensions.width, visibleHeight);
     context.rect(
       0,
-      dimensions.height - visibleRows * pixelSize,
+      dimensions.height - visibleHeight,
       dimensions.width,
-      visibleRows * pixelSize,
+      visibleHeight,
     );
   } else {
     const y = revealDirection === 'top-down'
       ? 0
-      : dimensions.height - visibleRows * pixelSize;
-    context.rect(0, y, dimensions.width, visibleRows * pixelSize);
+      : dimensions.height - visibleHeight;
+    context.rect(0, y, dimensions.width, visibleHeight);
   }
 
   context.clip();

@@ -87,7 +87,7 @@ None. The approved spec fixes the MVP decisions.
 Add one selectable puzzle-font mode without changing round rules. The existing
 Pixel renderer remains the default. Selecting Times New Roman in settings starts
 the next round with ordinary smooth serif text drawn to the same canvas and
-clipped into the existing seven reveal bands.
+clipped to 27px, then grows by 6px after each valid wrong guess.
 
 ## Dependency Graph
 
@@ -103,8 +103,9 @@ next-round drawing
 
 ## Architecture Decisions
 
-- Reuse the existing canvas dimensions, seven logical rows, reveal direction,
-  and game-rule attempt limit. A font mode is visual-only for now.
+- Reuse the existing canvas dimensions, reveal direction, and game-rule attempt
+  limit. Times New Roman starts at 27px and grows by 6px per valid wrong guess;
+  Pixel keeps its existing seven logical rows.
 - Use the browser stack `"Times New Roman", Times, serif`; do not download a
   font or add a dependency. Browsers without Times New Roman use their normal
   Times/serif fallback.
@@ -116,7 +117,7 @@ next-round drawing
 ### Phase 4: Times New Roman mode
 
 - [x] Task 4: Add Times New Roman selection and render the next puzzle with
-  seven-band smooth serif text.
+  27px initial smooth serif text that grows by 6px per wrong guess.
 
 ### Checkpoint: Times New Roman mode
 
@@ -131,7 +132,7 @@ next-round drawing
 | Risk | Impact | Mitigation |
 |---|---|---|
 | Times New Roman is unavailable | Low | Use the native Times then generic serif fallbacks. |
-| Smooth text changes the number of clues | Medium | Preserve the current seven logical canvas bands and rule height. |
+| Smooth text changes the number of clues | Medium | Use the agreed 27px initial reveal and 6px increment without changing game rules. |
 | A font change leaks into the current round | Medium | Apply the saved setting only when `startRound()` creates the next display. |
 
 ## Open Questions
