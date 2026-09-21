@@ -20,6 +20,7 @@ const settingsButton = document.querySelector('#settings-button');
 const settingsDialog = document.querySelector('#settings-dialog');
 const settingsForm = document.querySelector('#settings-form');
 const settingsCancel = document.querySelector('#settings-cancel');
+const themeToggle = document.querySelector('#theme-toggle');
 
 const settings = {
   revealDirection: 'bottom-up',
@@ -34,6 +35,13 @@ let displayWord;
 function setStatus(message, isCorrect = false) {
   status.textContent = message;
   status.classList.toggle('is-correct', isCorrect);
+}
+
+function applyTheme() {
+  const isDark = settings.theme === 'dark';
+  document.documentElement.dataset.theme = settings.theme;
+  themeToggle.setAttribute('aria-label', isDark ? 'Enable light mode' : 'Enable dark mode');
+  themeToggle.title = isDark ? 'Enable light mode' : 'Enable dark mode';
 }
 
 function chooseAnswer() {
@@ -84,7 +92,6 @@ function syncSettingsForm() {
   settingsForm.querySelector(`[name="reveal-direction"][value="${settings.revealDirection}"]`).checked = true;
   settingsForm.querySelector(`[name="letter-case"][value="${settings.letterCase}"]`).checked = true;
   settingsForm.querySelector(`[name="font-mode"][value="${settings.fontMode}"]`).checked = true;
-  settingsForm.querySelector(`[name="theme"][value="${settings.theme}"]`).checked = true;
 }
 
 form.addEventListener('submit', (event) => {
@@ -119,6 +126,10 @@ form.addEventListener('submit', (event) => {
 });
 
 newRoundButton.addEventListener('click', startRound);
+themeToggle.addEventListener('click', () => {
+  settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+});
 settingsButton.addEventListener('click', () => {
   syncSettingsForm();
   settingsDialog.showModal();
@@ -131,10 +142,9 @@ settingsForm.addEventListener('submit', (event) => {
   settings.revealDirection = settingsForm.elements['reveal-direction'].value;
   settings.letterCase = settingsForm.elements['letter-case'].value;
   settings.fontMode = settingsForm.elements['font-mode'].value;
-  settings.theme = settingsForm.elements.theme.value;
-  document.documentElement.dataset.theme = settings.theme;
   settingsDialog.close();
   startRound();
 });
 
+applyTheme();
 startRound();

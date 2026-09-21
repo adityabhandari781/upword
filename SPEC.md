@@ -21,8 +21,8 @@ uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
 reveal 27px and reveal an additional 6px after each valid wrong guess (per edge
 in ends-to-center mode). A completed round reveals the full word. Ends-to-center
 rounds allow two wrong guesses; other modes allow `floor(pixelHeight / 2)`.
-Settings also provide a Light (default) or Dark appearance for the current
-browser session.
+A dedicated button in the page header provides a Light (default) or Dark
+appearance for the current browser session.
 
 ## Tech Stack
 
@@ -131,8 +131,8 @@ export function maxWrongGuesses(pixelHeight) {
     expanded by 6px for each valid wrong guess. It uses the normal browser
     fallback when Comic Sans is not installed.
 11. `npm test` passes.
-12. Settings can apply the light or dark color scheme without changing puzzle
-    rules, answer validation, or font selection.
+12. A labelled header button can apply the light or dark color scheme without
+    changing puzzle rules, answer validation, or font selection.
 
 ## Open Questions
 

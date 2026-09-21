@@ -12,6 +12,11 @@
   <body>
     <main class="game-shell">
       <header class="game-header">
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Enable dark mode" title="Enable dark mode">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
+          </svg>
+        </button>
         <p class="eyebrow">A visual word puzzle</p>
         <h1>Height Wordle</h1>
         <p class="intro">Read the pixels from the bottom up. Guess the word before its shape gives it away.</p>
@@ -74,12 +79,6 @@
           <label><input type="radio" name="font-mode" value="pixel"> Pixel</label>
           <label><input type="radio" name="font-mode" value="times-new-roman" checked> Times New Roman</label>
           <label><input type="radio" name="font-mode" value="comic-sans"> Comic Sans</label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Appearance</legend>
-          <label><input type="radio" name="theme" value="light" checked> Light</label>
-          <label><input type="radio" name="theme" value="dark"> Dark</label>
         </fieldset>
 
         <div class="settings-actions">
