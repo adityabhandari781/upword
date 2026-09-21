@@ -20,7 +20,7 @@ rendering. `Comic Sans`
 uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
 reveal 24px and reveal an additional 12px after each valid wrong guess. In
 ends-to-center mode, each edge starts at 12px and grows by 6px. A completed
-round reveals the full word. Ends-to-center rounds allow two wrong guesses;
+round reveals the full word. Ends-to-center rounds allow three wrong guesses;
 other modes allow `floor(pixelHeight / 2)`.
 A dedicated button in the page header provides a Dark (default) or Light
 appearance for the current browser session.

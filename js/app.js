@@ -76,7 +76,7 @@ function startRound() {
   round = createRound({
     answer,
     pixelHeight: GLYPH_HEIGHT,
-    wrongGuessLimit: settings.revealDirection === 'ends-to-center' ? 2 : undefined,
+    wrongGuessLimit: settings.revealDirection === 'ends-to-center' ? 3 : undefined,
   });
   setStatus(settings.revealDirection === 'top-down'
     ? 'The top row is your first clue.'
