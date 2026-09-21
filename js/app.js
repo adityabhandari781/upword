@@ -26,7 +26,7 @@ const settings = {
   revealDirection: 'bottom-up',
   letterCase: 'uppercase',
   fontMode: 'times-new-roman',
-  theme: 'light',
+  theme: 'dark',
 };
 
 let round;

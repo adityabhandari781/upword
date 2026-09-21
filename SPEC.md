@@ -21,7 +21,7 @@ uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
 reveal 27px and reveal an additional 6px after each valid wrong guess (per edge
 in ends-to-center mode). A completed round reveals the full word. Ends-to-center
 rounds allow two wrong guesses; other modes allow `floor(pixelHeight / 2)`.
-A dedicated button in the page header provides a Light (default) or Dark
+A dedicated button in the page header provides a Dark (default) or Light
 appearance for the current browser session.
 
 ## Tech Stack
