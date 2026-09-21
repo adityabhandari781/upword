@@ -85,7 +85,7 @@ None. The approved spec fixes the MVP decisions.
 ## Overview
 
 Add selectable puzzle-font modes without changing round rules. The existing
-Times New Roman is the default renderer. It and Comic Sans start at 12px and
+Times New Roman is the default renderer. It and Comic Sans start at 24px and
 grow by 12px after each valid wrong guess.
 
 ## Dependency Graph
@@ -103,7 +103,7 @@ next-round drawing
 ## Architecture Decisions
 
 - Reuse the existing canvas dimensions, reveal direction, and game-rule attempt
-  limit. Times New Roman starts at 12px and grows by 12px per valid wrong guess;
+  limit. Times New Roman starts at 24px and grows by 12px per valid wrong guess;
   Pixel keeps its existing seven logical rows.
 - Use the browser stack `"Times New Roman", Times, serif`; do not download a
   font or add a dependency. Browsers without Times New Roman use their normal
@@ -116,7 +116,7 @@ next-round drawing
 ### Phase 4: Times New Roman mode
 
 - [x] Task 4: Add Times New Roman selection and render the next puzzle with
-  12px initial smooth serif text that grows by 12px per wrong guess.
+  24px initial smooth serif text that grows by 12px per wrong guess.
 
 ### Checkpoint: Times New Roman mode
 
@@ -129,14 +129,14 @@ next-round drawing
 ### Phase 5: Comic Sans mode
 
 - [x] Task 5: Add Comic Sans selection and render the next puzzle with the
-  12px initial smooth-text reveal that grows by 12px per wrong guess.
+  24px initial smooth-text reveal that grows by 12px per wrong guess.
 
 ## Risks and Mitigations
 
 | Risk | Impact | Mitigation |
 |---|---|---|
 | Times New Roman is unavailable | Low | Use the native Times then generic serif fallbacks. |
-| Smooth text changes the number of clues | Medium | Use the agreed 12px initial reveal and 12px increment without changing game rules. |
+| Smooth text changes the number of clues | Medium | Use the agreed 24px initial reveal and 12px increment without changing game rules. |
 | A font change leaks into the current round | Medium | Apply the saved setting only when `startRound()` creates the next display. |
 
 ## Open Questions

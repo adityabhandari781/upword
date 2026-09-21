@@ -1,7 +1,7 @@
 export const GLYPH_WIDTH = 5;
 export const GLYPH_HEIGHT = 7;
 export const PIXEL_SIZE = 12;
-const SMOOTH_INITIAL_REVEAL_HEIGHT = 12;
+const SMOOTH_INITIAL_REVEAL_HEIGHT = 24;
 const SMOOTH_REVEAL_INCREMENT = 12;
 
 const uppercaseGlyphs = {
