@@ -85,8 +85,8 @@ None. The approved spec fixes the MVP decisions.
 ## Overview
 
 Add selectable puzzle-font modes without changing round rules. The existing
-Pixel renderer remains the default. Times New Roman and Comic Sans start at
-27px and grow by 6px after each valid wrong guess.
+Times New Roman is the default renderer. It and Comic Sans start at 27px and
+grow by 6px after each valid wrong guess.
 
 ## Dependency Graph
 

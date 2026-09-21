@@ -24,7 +24,7 @@ const settingsCancel = document.querySelector('#settings-cancel');
 const settings = {
   revealDirection: 'bottom-up',
   letterCase: 'uppercase',
-  fontMode: 'pixel',
+  fontMode: 'times-new-roman',
 };
 
 let round;

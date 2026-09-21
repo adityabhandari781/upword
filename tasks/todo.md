@@ -111,14 +111,14 @@ manual pass.
 
 ## Task 4: Add Times New Roman font mode
 
-**Description:** Add a `Pixel`/`Times New Roman` setting. Keep Pixel selected
-by default. When a new round uses Times New Roman, draw smooth text through the
+**Description:** Add a `Pixel`/`Times New Roman` setting. Keep Times New Roman
+selected by default. When a new round uses Times New Roman, draw smooth text through the
 agreed 27px initial reveal, then add 6px per valid wrong guess while preserving
 display casing, reveal direction, and all game rules.
 
 **Acceptance criteria:**
 
-- [x] The settings dialog offers Pixel (default) and Times New Roman; applying
+- [x] The settings dialog offers Pixel and Times New Roman (default); applying
   either selection starts the next round with that mode.
 - [x] Times New Roman uses `"Times New Roman", Times, serif`, renders smooth
   text, starts at 27px, adds 6px per wrong guess, and respects bottom-up,

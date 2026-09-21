@@ -14,8 +14,9 @@ play, win or lose, and immediately start a new random round on modern desktop
 and mobile browsers. A settings control provides bottom-up (default), top-down,
 or ends-to-center reveal direction; uppercase (default), lowercase, or mixed
 display casing; and a puzzle font mode for the next puzzle. The default
-`Pixel` mode retains the bitmap glyph rendering. `Times New Roman` renders
-ordinary smooth serif text using `"Times New Roman", Times, serif`; `Comic Sans`
+`Times New Roman` is the default mode and renders ordinary smooth serif text
+using `"Times New Roman", Times, serif`. `Pixel` mode retains the bitmap glyph
+rendering. `Comic Sans`
 uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
 reveal 27px and reveal an additional 6px after each valid wrong guess (per edge
 in ends-to-center mode). A completed round reveals the full word. Ends-to-center
@@ -118,12 +119,11 @@ export function maxWrongGuesses(pixelHeight) {
 7. Settings can select reveal direction, display casing, and a puzzle font;
    those choices apply to the next puzzle without changing answer-validation,
    reveal direction, or attempt-limit rules.
-8. `Pixel` is selected by default and displays the existing bitmap word exactly
-   as before.
-9. Selecting `Times New Roman` displays the puzzle word as smooth serif text
-   in `"Times New Roman", Times, serif`, initially clipped to 27px and expanded
-   by 6px for each valid wrong guess. It uses the normal browser fallback when
-   Times New Roman is not installed.
+8. `Times New Roman` is selected by default and displays the puzzle word as
+   smooth serif text in `"Times New Roman", Times, serif`.
+9. Times New Roman puzzles start clipped to 27px and expand by 6px for each
+   valid wrong guess. They use the normal browser fallback when Times New Roman
+   is not installed.
 10. Selecting `Comic Sans` displays the puzzle word as smooth text in
     `"Comic Sans MS", "Comic Sans", cursive`, initially clipped to 27px and
     expanded by 6px for each valid wrong guess. It uses the normal browser
