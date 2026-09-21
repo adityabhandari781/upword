@@ -122,7 +122,7 @@ display casing, reveal direction, and all game rules.
   either selection starts the next round with that mode.
 - [x] Times New Roman uses `"Times New Roman", Times, serif`, renders smooth
   text, starts at 24px, adds 12px per wrong guess, and respects bottom-up,
-  top-down, and ends-to-center clipping.
+  top-down, and ends-to-center clipping at half those values per edge.
 - [x] Pixel mode's current output and all attempt limits are unchanged.
 
 **Verification:**

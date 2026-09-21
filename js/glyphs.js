@@ -543,10 +543,11 @@ function drawSmoothWord(
   return dimensions;
 }
 
-function smoothRevealHeight(dimensions, revealedRows) {
-  return revealedRows >= GLYPH_HEIGHT
-    ? dimensions.height
-    : SMOOTH_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * SMOOTH_REVEAL_INCREMENT;
+function smoothRevealHeight(dimensions, revealedRows, revealDirection) {
+  if (revealedRows >= GLYPH_HEIGHT) return dimensions.height;
+
+  const scale = revealDirection === 'ends-to-center' ? 0.5 : 1;
+  return (SMOOTH_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * SMOOTH_REVEAL_INCREMENT) * scale;
 }
 
 export function drawTimesNewRomanWord(
@@ -557,7 +558,7 @@ export function drawTimesNewRomanWord(
 ) {
   const dimensions = wordDimensions(word, pixelSize);
 
-  return drawSmoothWord(context, word, smoothRevealHeight(dimensions, revealedRows), {
+  return drawSmoothWord(context, word, smoothRevealHeight(dimensions, revealedRows, revealDirection), {
     pixelSize,
     revealDirection,
     font: '"Times New Roman", Times, serif',
@@ -572,7 +573,7 @@ export function drawComicSansWord(
 ) {
   const dimensions = wordDimensions(word, pixelSize);
 
-  return drawSmoothWord(context, word, smoothRevealHeight(dimensions, revealedRows), {
+  return drawSmoothWord(context, word, smoothRevealHeight(dimensions, revealedRows, revealDirection), {
     pixelSize,
     revealDirection,
     font: '"Comic Sans MS", "Comic Sans", cursive',

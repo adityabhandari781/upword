@@ -18,9 +18,10 @@ display casing; and a puzzle font mode for the next puzzle. The default
 using `"Times New Roman", Times, serif`. `Pixel` mode retains the bitmap glyph
 rendering. `Comic Sans`
 uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
-reveal 24px and reveal an additional 12px after each valid wrong guess (per edge
-in ends-to-center mode). A completed round reveals the full word. Ends-to-center
-rounds allow two wrong guesses; other modes allow `floor(pixelHeight / 2)`.
+reveal 24px and reveal an additional 12px after each valid wrong guess. In
+ends-to-center mode, each edge starts at 12px and grows by 6px. A completed
+round reveals the full word. Ends-to-center rounds allow two wrong guesses;
+other modes allow `floor(pixelHeight / 2)`.
 A dedicated button in the page header provides a Dark (default) or Light
 appearance for the current browser session.
 
@@ -124,12 +125,13 @@ export function maxWrongGuesses(pixelHeight) {
 8. `Times New Roman` is selected by default and displays the puzzle word as
    smooth serif text in `"Times New Roman", Times, serif`.
 9. Times New Roman puzzles start clipped to 24px and expand by 12px for each
-   valid wrong guess. They use the normal browser fallback when Times New Roman
-   is not installed.
+   valid wrong guess; in ends-to-center mode, each edge uses half those values.
+   They use the normal browser fallback when Times New Roman is not installed.
 10. Selecting `Comic Sans` displays the puzzle word as smooth text in
     `"Comic Sans MS", "Comic Sans", cursive`, initially clipped to 24px and
-    expanded by 12px for each valid wrong guess. It uses the normal browser
-    fallback when Comic Sans is not installed.
+    expanded by 12px for each valid wrong guess; in ends-to-center mode, each
+    edge uses half those values. It uses the normal browser fallback when Comic
+    Sans is not installed.
 11. `npm test` passes.
 12. A labelled header button can apply the light or dark color scheme without
     changing puzzle rules, answer validation, or font selection.

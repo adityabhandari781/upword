@@ -133,17 +133,26 @@ test('Times New Roman starts at 24 pixels and reveals 12 more after a wrong gues
   assert.equal(context.textBaseline, 'alphabetic');
 });
 
-test('Times New Roman reveals 24 pixels from both ends in ends-to-center mode', () => {
+test('Times New Roman halves the initial and incremental reveal per end', () => {
   const context = createTextContext();
+  const afterWrongGuessContext = createTextContext();
 
   drawTimesNewRomanWord(context, 'CABIN', 1, {
     pixelSize: 12,
     revealDirection: 'ends-to-center',
   });
+  drawTimesNewRomanWord(afterWrongGuessContext, 'CABIN', 2, {
+    pixelSize: 12,
+    revealDirection: 'ends-to-center',
+  });
 
   assert.deepEqual(context.clipRects, [
-    [0, 0, 348, 24],
-    [0, 60, 348, 24],
+    [0, 0, 348, 12],
+    [0, 72, 348, 12],
+  ]);
+  assert.deepEqual(afterWrongGuessContext.clipRects, [
+    [0, 0, 348, 18],
+    [0, 66, 348, 18],
   ]);
 });
 
