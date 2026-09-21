@@ -25,6 +25,7 @@ const settings = {
   revealDirection: 'bottom-up',
   letterCase: 'uppercase',
   fontMode: 'times-new-roman',
+  theme: 'light',
 };
 
 let round;
@@ -83,6 +84,7 @@ function syncSettingsForm() {
   settingsForm.querySelector(`[name="reveal-direction"][value="${settings.revealDirection}"]`).checked = true;
   settingsForm.querySelector(`[name="letter-case"][value="${settings.letterCase}"]`).checked = true;
   settingsForm.querySelector(`[name="font-mode"][value="${settings.fontMode}"]`).checked = true;
+  settingsForm.querySelector(`[name="theme"][value="${settings.theme}"]`).checked = true;
 }
 
 form.addEventListener('submit', (event) => {
@@ -129,6 +131,8 @@ settingsForm.addEventListener('submit', (event) => {
   settings.revealDirection = settingsForm.elements['reveal-direction'].value;
   settings.letterCase = settingsForm.elements['letter-case'].value;
   settings.fontMode = settingsForm.elements['font-mode'].value;
+  settings.theme = settingsForm.elements.theme.value;
+  document.documentElement.dataset.theme = settings.theme;
   settingsDialog.close();
   startRound();
 });

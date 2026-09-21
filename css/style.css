@@ -8,6 +8,21 @@
   --accent: #f5b642;
   --accent-dark: #8f4e0c;
   --error: #a43d35;
+  --input: #fff;
+  --on-ink: #fff;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #edf3f8;
+  --muted: #b8c3cf;
+  --paper: #101820;
+  --card: #172431;
+  --line: #3b4c5d;
+  --accent-dark: #ffd36c;
+  --error: #ff9086;
+  --input: #0d1720;
+  --on-ink: #12202d;
 }
 
 * {
@@ -257,7 +272,7 @@ input {
   border: 1px solid var(--line);
   border-radius: 0.5rem;
   padding: 0.75rem 0.85rem;
-  background: #fff;
+  background: var(--input);
   color: var(--ink);
 }
 
@@ -266,7 +281,7 @@ button {
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
   font-weight: 750;
 }
 
