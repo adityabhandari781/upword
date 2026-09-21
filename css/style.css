@@ -95,6 +95,18 @@ input:focus-visible {
   stroke-width: 2;
 }
 
+.theme-toggle .sun-icon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .moon-icon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .sun-icon {
+  display: block;
+}
+
 .eyebrow {
   margin: 0 0 0.35rem;
   color: var(--accent-dark);
