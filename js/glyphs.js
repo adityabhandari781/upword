@@ -1,8 +1,8 @@
 export const GLYPH_WIDTH = 5;
 export const GLYPH_HEIGHT = 7;
 export const PIXEL_SIZE = 12;
-const TIMES_INITIAL_REVEAL_HEIGHT = 27;
-const TIMES_REVEAL_INCREMENT = 6;
+const SMOOTH_INITIAL_REVEAL_HEIGHT = 27;
+const SMOOTH_REVEAL_INCREMENT = 6;
 
 const uppercaseGlyphs = {
   a: [
@@ -541,6 +541,12 @@ function drawSmoothWord(
   return dimensions;
 }
 
+function smoothRevealHeight(dimensions, revealedRows) {
+  return revealedRows >= GLYPH_HEIGHT
+    ? dimensions.height
+    : SMOOTH_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * SMOOTH_REVEAL_INCREMENT;
+}
+
 export function drawTimesNewRomanWord(
   context,
   word,
@@ -548,11 +554,8 @@ export function drawTimesNewRomanWord(
   { pixelSize = PIXEL_SIZE, revealDirection = 'bottom-up' } = {},
 ) {
   const dimensions = wordDimensions(word, pixelSize);
-  const visibleHeight = revealedRows >= GLYPH_HEIGHT
-    ? dimensions.height
-    : TIMES_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * TIMES_REVEAL_INCREMENT;
 
-  return drawSmoothWord(context, word, visibleHeight, {
+  return drawSmoothWord(context, word, smoothRevealHeight(dimensions, revealedRows), {
     pixelSize,
     revealDirection,
     font: '"Times New Roman", Times, serif',
@@ -565,9 +568,9 @@ export function drawComicSansWord(
   revealedRows,
   { pixelSize = PIXEL_SIZE, revealDirection = 'bottom-up' } = {},
 ) {
-  const visibleRows = Math.max(0, Math.min(GLYPH_HEIGHT, revealedRows));
+  const dimensions = wordDimensions(word, pixelSize);
 
-  return drawSmoothWord(context, word, visibleRows * pixelSize, {
+  return drawSmoothWord(context, word, smoothRevealHeight(dimensions, revealedRows), {
     pixelSize,
     revealDirection,
     font: '"Comic Sans MS", "Comic Sans", cursive',

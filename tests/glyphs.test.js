@@ -140,7 +140,7 @@ test('Times New Roman reveals 27 pixels from both ends in ends-to-center mode', 
   ]);
 });
 
-test('Comic Sans uses the standard reveal bands', () => {
+test('Comic Sans starts at 27 pixels and reveals 6 more after a wrong guess', () => {
   const initialContext = createTextContext();
   const afterWrongGuessContext = createTextContext();
 
@@ -151,7 +151,7 @@ test('Comic Sans uses the standard reveal bands', () => {
     pixelSize: 12,
   });
 
-  assert.deepEqual(initialContext.clipRects, [[0, 72, dimensions.width, 12]]);
-  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 60, dimensions.width, 24]]);
+  assert.deepEqual(initialContext.clipRects, [[0, 57, dimensions.width, 27]]);
+  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 51, dimensions.width, 33]]);
   assert.match(initialContext.font, /Comic Sans/);
 });

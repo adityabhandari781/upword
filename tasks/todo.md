@@ -154,14 +154,14 @@ display casing, reveal direction, and all game rules.
 ## Task 5: Add Comic Sans font mode
 
 **Description:** Add Comic Sans as a smooth font option in the existing puzzle
-font settings. It uses the standard reveal bands, while Times New Roman keeps
-its custom 27px initial reveal and 6px increment.
+font settings. It uses the same 27px initial reveal and 6px increment as Times
+New Roman.
 
 **Acceptance criteria:**
 
 - [x] The settings dialog offers Comic Sans alongside Pixel and Times New Roman.
 - [x] Comic Sans uses `"Comic Sans MS", "Comic Sans", cursive` and the standard
-  reveal bands.
+  27px initial reveal with a 6px increment per valid wrong guess.
 - [x] Pixel and Times New Roman behavior remains unchanged.
 
 **Verification:**
