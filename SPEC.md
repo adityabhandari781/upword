@@ -18,7 +18,7 @@ display casing; and a puzzle font mode for the next puzzle. The default
 using `"Times New Roman", Times, serif`. `Pixel` mode retains the bitmap glyph
 rendering. `Comic Sans`
 uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
-reveal 27px and reveal an additional 6px after each valid wrong guess (per edge
+reveal 12px and reveal an additional 12px after each valid wrong guess (per edge
 in ends-to-center mode). A completed round reveals the full word. Ends-to-center
 rounds allow two wrong guesses; other modes allow `floor(pixelHeight / 2)`.
 A dedicated button in the page header provides a Dark (default) or Light
@@ -88,7 +88,7 @@ export function maxWrongGuesses(pixelHeight) {
   increment the revealed-row count by one, and a loss at the half-height limit.
 - Test all reveal directions and stable mixed-case display words.
 - Add a small renderer-selection test proving that `Pixel` remains the default
-  and `Times New Roman` starts at 27px, expands by 6px after a wrong guess, and
+  and `Times New Roman` starts at 12px, expands by 12px after a wrong guess, and
   uses the smooth-text renderer.
 - Manually verify the canvas reveal moves bottom-to-top and that keyboard-only
   and narrow-screen play work, including the settings dialog.
@@ -123,12 +123,12 @@ export function maxWrongGuesses(pixelHeight) {
    reveal direction, or attempt-limit rules.
 8. `Times New Roman` is selected by default and displays the puzzle word as
    smooth serif text in `"Times New Roman", Times, serif`.
-9. Times New Roman puzzles start clipped to 27px and expand by 6px for each
+9. Times New Roman puzzles start clipped to 12px and expand by 12px for each
    valid wrong guess. They use the normal browser fallback when Times New Roman
    is not installed.
 10. Selecting `Comic Sans` displays the puzzle word as smooth text in
-    `"Comic Sans MS", "Comic Sans", cursive`, initially clipped to 27px and
-    expanded by 6px for each valid wrong guess. It uses the normal browser
+    `"Comic Sans MS", "Comic Sans", cursive`, initially clipped to 12px and
+    expanded by 12px for each valid wrong guess. It uses the normal browser
     fallback when Comic Sans is not installed.
 11. `npm test` passes.
 12. A labelled header button can apply the light or dark color scheme without

@@ -113,7 +113,7 @@ manual pass.
 
 **Description:** Add a `Pixel`/`Times New Roman` setting. Keep Times New Roman
 selected by default. When a new round uses Times New Roman, draw smooth text through the
-agreed 27px initial reveal, then add 6px per valid wrong guess while preserving
+agreed 12px initial reveal, then add 12px per valid wrong guess while preserving
 display casing, reveal direction, and all game rules.
 
 **Acceptance criteria:**
@@ -121,7 +121,7 @@ display casing, reveal direction, and all game rules.
 - [x] The settings dialog offers Pixel and Times New Roman (default); applying
   either selection starts the next round with that mode.
 - [x] Times New Roman uses `"Times New Roman", Times, serif`, renders smooth
-  text, starts at 27px, adds 6px per wrong guess, and respects bottom-up,
+  text, starts at 12px, adds 12px per wrong guess, and respects bottom-up,
   top-down, and ends-to-center clipping.
 - [x] Pixel mode's current output and all attempt limits are unchanged.
 
@@ -154,14 +154,14 @@ display casing, reveal direction, and all game rules.
 ## Task 5: Add Comic Sans font mode
 
 **Description:** Add Comic Sans as a smooth font option in the existing puzzle
-font settings. It uses the same 27px initial reveal and 6px increment as Times
+font settings. It uses the same 12px initial reveal and 12px increment as Times
 New Roman.
 
 **Acceptance criteria:**
 
 - [x] The settings dialog offers Comic Sans alongside Pixel and Times New Roman.
 - [x] Comic Sans uses `"Comic Sans MS", "Comic Sans", cursive` and the standard
-  27px initial reveal with a 6px increment per valid wrong guess.
+  12px initial reveal with a 12px increment per valid wrong guess.
 - [x] Pixel and Times New Roman behavior remains unchanged.
 
 **Verification:**
