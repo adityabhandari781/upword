@@ -534,8 +534,10 @@ function drawSmoothWord(
   context.fillStyle = '#f5b642';
   context.font = `${pixelSize * 6}px ${font}`;
   context.textAlign = 'center';
-  context.textBaseline = 'middle';
-  context.fillText(word, dimensions.width / 2, dimensions.height / 2);
+  context.textBaseline = 'alphabetic';
+  const metrics = context.measureText(word);
+  const textY = (dimensions.height + metrics.actualBoundingBoxAscent - metrics.actualBoundingBoxDescent) / 2;
+  context.fillText(word, dimensions.width / 2, textY);
   context.restore();
 
   return dimensions;

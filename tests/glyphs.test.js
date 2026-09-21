@@ -47,6 +47,12 @@ function createTextContext() {
       clipRects.push(args);
     },
     clip() {},
+    measureText() {
+      return {
+        actualBoundingBoxAscent: 50,
+        actualBoundingBoxDescent: 15,
+      };
+    },
     fillText(...args) {
       textFills.push(args);
     },
@@ -121,9 +127,10 @@ test('Times New Roman starts at 27 pixels and reveals 6 more after a wrong guess
   assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 51, dimensions.width, 33]]);
   assert.equal(context.textFills.length, 1);
   assert.equal(context.textFills[0][0], 'CABIN');
+  assert.equal(context.textFills[0][2], 59.5);
   assert.match(context.font, /Times New Roman/);
   assert.equal(context.textAlign, 'center');
-  assert.equal(context.textBaseline, 'middle');
+  assert.equal(context.textBaseline, 'alphabetic');
 });
 
 test('Times New Roman reveals 27 pixels from both ends in ends-to-center mode', () => {
