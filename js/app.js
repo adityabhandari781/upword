@@ -1,7 +1,7 @@
 import { allowedGuesses, answerWords } from './words.js';
 import { createRound, submitGuess } from './game.js';
 import { claimUsername, getCurrentProfile } from './profile.js';
-import { getLeaderboard } from './leaderboard.js';
+import { getLeaderboard, leaderboardEmptyMessage } from './leaderboard.js';
 import { awardXp, getMyProgress } from './xp.js';
 import {
   GLYPH_HEIGHT,
@@ -31,6 +31,7 @@ const profileInput = document.querySelector('#username');
 const profileStatus = document.querySelector('#profile-status');
 const profileCancel = document.querySelector('#profile-cancel');
 const profileSubmit = document.querySelector('#profile-submit');
+const primaryNav = document.querySelector('.primary-nav');
 const playView = document.querySelector('#play-view');
 const leaderboardsView = document.querySelector('#leaderboards-view');
 const profileView = document.querySelector('#profile-view');
@@ -73,6 +74,7 @@ function showProfileStatus(message) {
 
 function showProfileAction() {
   const isSignedIn = Boolean(profile);
+  primaryNav.hidden = !isSignedIn;
   profileAction.textContent = isSignedIn ? 'Profile' : 'Log in to level up';
   profileAction.title = isSignedIn ? `View ${profile.username}'s profile` : '';
   if (isSignedIn) {
@@ -97,19 +99,26 @@ function currentView() {
 
 function setNavigationState(view) {
   navigationLinks.forEach((link) => {
-    link.toggleAttribute('aria-current', link.dataset.viewLink === view);
+    if (link.dataset.viewLink === view) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
   });
-  profileAction.toggleAttribute('aria-current', view === 'profile');
+  if (view === 'profile') {
+    profileAction.setAttribute('aria-current', 'page');
+  } else {
+    profileAction.removeAttribute('aria-current');
+  }
 }
 
 function renderLeaderboard(entries) {
   leaderboardList.replaceChildren();
-  if (entries.length === 0) {
-    leaderboardStatus.textContent = 'No one has earned XP yet.';
-    return;
-  }
+  const emptyMessage = leaderboardEmptyMessage(entries);
+  leaderboardStatus.hidden = !emptyMessage;
+  leaderboardStatus.textContent = emptyMessage ?? '';
+  if (emptyMessage) return;
 
-  leaderboardStatus.textContent = '';
   entries.forEach((entry) => {
     const item = document.createElement('li');
     const name = document.createElement('span');
@@ -124,6 +133,7 @@ function renderLeaderboard(entries) {
 
 async function loadLeaderboard() {
   leaderboardStatus.textContent = 'Loading leaderboard…';
+  leaderboardStatus.hidden = false;
   renderLeaderboard(await getLeaderboard());
 }
 
