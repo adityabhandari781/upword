@@ -1,6 +1,7 @@
 import { allowedGuesses, answerWords } from './words.js';
 import { createRound, submitGuess } from './game.js';
 import { claimUsername, getCurrentProfile } from './profile.js';
+import { awardXp } from './xp.js';
 import {
   GLYPH_HEIGHT,
   createDisplayWord,
@@ -38,6 +39,7 @@ const settings = {
 };
 
 let round;
+let roundId;
 let displayWord;
 let profile;
 
@@ -103,6 +105,7 @@ function startRound() {
     pixelHeight: GLYPH_HEIGHT,
     wrongGuessLimit: settings.revealDirection === 'ends-to-center' ? 3 : undefined,
   });
+  roundId = crypto.randomUUID();
   setStatus(settings.revealDirection === 'top-down'
     ? 'The top row is your first clue.'
     : settings.revealDirection === 'ends-to-center'
@@ -119,7 +122,7 @@ function syncSettingsForm() {
   settingsForm.querySelector(`[name="font-mode"][value="${settings.fontMode}"]`).checked = true;
 }
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const result = submitGuess(round, input.value, allowedGuesses);
   round = result.state;
@@ -147,6 +150,21 @@ form.addEventListener('submit', (event) => {
 
   if (round.status !== 'playing') {
     newRoundButton.focus();
+  }
+
+  if (result.outcome !== 'correct') return;
+
+  const completedRoundId = roundId;
+  const award = await awardXp({
+    roundId: completedRoundId,
+    revealDirection: settings.revealDirection,
+    wrongGuesses: round.wrongGuesses,
+  });
+  if (award.ok && roundId === completedRoundId) {
+    setStatus(
+      `Correct! +${award.progress.awarded_xp} XP · ${award.progress.total_xp} XP · Level ${award.progress.level}`,
+      true,
+    );
   }
 });
 
