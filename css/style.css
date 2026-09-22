@@ -364,7 +364,7 @@ h2 {
 .leaderboard-list {
   display: grid;
   gap: 0.5rem;
-  list-style-position: inside;
+  list-style: none;
 }
 
 .leaderboard-list li,
@@ -375,6 +375,20 @@ h2 {
   padding: 0.75rem;
   border: 1px solid var(--line);
   background: var(--canvas);
+}
+
+.leaderboard-player {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  gap: 0.75rem;
+}
+
+.leaderboard-rank {
+  min-width: 2rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
 }
 
 .leaderboard-xp,

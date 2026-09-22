@@ -121,12 +121,18 @@ function renderLeaderboard(entries) {
 
   entries.forEach((entry) => {
     const item = document.createElement('li');
+    const player = document.createElement('span');
+    const rank = document.createElement('span');
     const name = document.createElement('span');
     const score = document.createElement('span');
+    player.className = 'leaderboard-player';
+    rank.className = 'leaderboard-rank';
+    rank.textContent = `#${entry.rank}`;
     name.textContent = `${entry.username} · Level ${entry.level}`;
     score.className = 'leaderboard-xp';
     score.textContent = `${entry.total_xp} XP`;
-    item.append(name, score);
+    player.append(rank, name);
+    item.append(player, score);
     leaderboardList.append(item);
   });
 }
