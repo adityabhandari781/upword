@@ -251,6 +251,8 @@ form.addEventListener('submit', async (event) => {
 
   if (round.status !== 'playing') {
     newRoundButton.focus();
+  } else {
+    input.focus();
   }
 
   if (result.outcome !== 'correct') return;
