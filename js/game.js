@@ -17,23 +17,7 @@ export function normalizeGuess(value) {
   return typeof value === 'string' ? value.trim().toLowerCase() : '';
 }
 
-export function submitGuess(round, rawGuess, allowedGuesses) {
-  if (round.status !== 'playing') {
-    return { outcome: 'finished', state: round };
-  }
-
-  const guess = normalizeGuess(rawGuess);
-  if (!/^[a-z]+$/.test(guess) || !allowedGuesses.includes(guess)) {
-    return { outcome: 'invalid', state: round };
-  }
-
-  if (guess === round.answer) {
-    return {
-      outcome: 'correct',
-      state: { ...round, revealedRows: round.pixelHeight, status: 'won' },
-    };
-  }
-
+function wrongGuessResult(round) {
   const wrongGuesses = round.wrongGuesses + 1;
   const isLost = wrongGuesses >= round.maxWrongGuesses;
   return {
@@ -47,4 +31,26 @@ export function submitGuess(round, rawGuess, allowedGuesses) {
       status: isLost ? 'lost' : 'playing',
     },
   };
+}
+
+export function submitGuess(round, rawGuess, allowedGuesses) {
+  if (round.status !== 'playing') {
+    return { outcome: 'finished', state: round };
+  }
+
+  const guess = normalizeGuess(rawGuess);
+  if (guess === '') return wrongGuessResult(round);
+
+  if (!/^[a-z]+$/.test(guess) || !allowedGuesses.includes(guess)) {
+    return { outcome: 'invalid', state: round };
+  }
+
+  if (guess === round.answer) {
+    return {
+      outcome: 'correct',
+      state: { ...round, revealedRows: round.pixelHeight, status: 'won' },
+    };
+  }
+
+  return wrongGuessResult(round);
 }

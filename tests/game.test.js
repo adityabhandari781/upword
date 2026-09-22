@@ -70,14 +70,43 @@ test('validates guesses against the supplied dictionary', () => {
   assert.equal(result.outcome, 'invalid');
 });
 
-test('empty and non-alphabetic guesses are invalid', () => {
+test('empty guesses reveal one row and consume one attempt', () => {
   const round = createRound({
     answer: 'cabin',
     pixelHeight: 7,
     allowedGuesses,
   });
 
-  assert.equal(submitGuess(round, '', allowedGuesses).outcome, 'invalid');
+  const result = submitGuess(round, '   ', allowedGuesses);
+
+  assert.equal(result.outcome, 'wrong');
+  assert.equal(result.state.wrongGuesses, 1);
+  assert.equal(result.state.revealedRows, 2);
+  assert.equal(result.state.status, 'playing');
+});
+
+test('an empty guess at the final attempt loses and reveals the full word', () => {
+  const round = createRound({
+    answer: 'cabin',
+    pixelHeight: 7,
+    wrongGuessLimit: 1,
+  });
+
+  const result = submitGuess(round, '', allowedGuesses);
+
+  assert.equal(result.outcome, 'lost');
+  assert.equal(result.state.wrongGuesses, 1);
+  assert.equal(result.state.revealedRows, 7);
+  assert.equal(result.state.status, 'lost');
+});
+
+test('non-alphabetic guesses remain invalid', () => {
+  const round = createRound({
+    answer: 'cabin',
+    pixelHeight: 7,
+    allowedGuesses,
+  });
+
   assert.equal(submitGuess(round, 'crane!', allowedGuesses).outcome, 'invalid');
 });
 
