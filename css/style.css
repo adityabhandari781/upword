@@ -79,6 +79,10 @@ input:focus-visible {
   gap: 0.35rem;
 }
 
+.primary-nav[hidden] {
+  display: none !important;
+}
+
 .account-actions {
   display: flex;
   align-items: center;
