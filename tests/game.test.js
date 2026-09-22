@@ -80,9 +80,24 @@ test('empty guesses reveal one row and consume one attempt', () => {
   const result = submitGuess(round, '   ', allowedGuesses);
 
   assert.equal(result.outcome, 'wrong');
+  assert.equal(result.reason, 'length');
   assert.equal(result.state.wrongGuesses, 1);
   assert.equal(result.state.revealedRows, 2);
   assert.equal(result.state.status, 'playing');
+});
+
+test('non-five-letter guesses are rejected without consuming an attempt', () => {
+  const round = createRound({
+    answer: 'cabin',
+    pixelHeight: 7,
+    allowedGuesses,
+  });
+
+  const result = submitGuess(round, 'four', allowedGuesses);
+
+  assert.equal(result.outcome, 'invalid');
+  assert.equal(result.reason, 'length');
+  assert.deepEqual(result.state, round);
 });
 
 test('an empty guess at the final attempt loses and reveals the full word', () => {

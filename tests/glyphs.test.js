@@ -133,7 +133,7 @@ test('Times New Roman starts at 24 pixels and reveals 8 more after a wrong guess
   assert.equal(context.textBaseline, 'alphabetic');
 });
 
-test('Times New Roman halves the initial and 8-pixel incremental reveal per end', () => {
+test('Times New Roman uses 80% initial and 50% incremental reveal per end', () => {
   const context = createTextContext();
   const afterWrongGuessContext = createTextContext();
 
@@ -146,14 +146,15 @@ test('Times New Roman halves the initial and 8-pixel incremental reveal per end'
     revealDirection: 'ends-to-center',
   });
 
-  assert.deepEqual(context.clipRects, [
-    [0, 0, 348, 12],
-    [0, 72, 348, 12],
-  ]);
-  assert.deepEqual(afterWrongGuessContext.clipRects, [
-    [0, 0, 348, 16],
-    [0, 68, 348, 16],
-  ]);
+  const tolerance = 1e-9;
+  assert.equal(context.clipRects.length, 2);
+  assert.ok(Math.abs(context.clipRects[0][3] - 19.2) < tolerance);
+  assert.ok(Math.abs(context.clipRects[1][1] - 64.8) < tolerance);
+  assert.ok(Math.abs(context.clipRects[1][3] - 19.2) < tolerance);
+  assert.equal(afterWrongGuessContext.clipRects.length, 2);
+  assert.ok(Math.abs(afterWrongGuessContext.clipRects[0][3] - 23.2) < tolerance);
+  assert.ok(Math.abs(afterWrongGuessContext.clipRects[1][1] - 60.8) < tolerance);
+  assert.ok(Math.abs(afterWrongGuessContext.clipRects[1][3] - 23.2) < tolerance);
 });
 
 test('Comic Sans starts at 24 pixels and reveals 8 more after a wrong guess', () => {

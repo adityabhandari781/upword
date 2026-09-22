@@ -17,11 +17,12 @@ export function normalizeGuess(value) {
   return typeof value === 'string' ? value.trim().toLowerCase() : '';
 }
 
-function wrongGuessResult(round) {
+function wrongGuessResult(round, reason) {
   const wrongGuesses = round.wrongGuesses + 1;
   const isLost = wrongGuesses >= round.maxWrongGuesses;
   return {
     outcome: isLost ? 'lost' : 'wrong',
+    ...(reason ? { reason } : {}),
     state: {
       ...round,
       wrongGuesses,
@@ -39,7 +40,11 @@ export function submitGuess(round, rawGuess, allowedGuesses) {
   }
 
   const guess = normalizeGuess(rawGuess);
-  if (guess === '') return wrongGuessResult(round);
+  if (guess === '') return wrongGuessResult(round, 'length');
+
+  if (guess.length !== 5) {
+    return { outcome: 'invalid', reason: 'length', state: round };
+  }
 
   if (!/^[a-z]+$/.test(guess) || !allowedGuesses.includes(guess)) {
     return { outcome: 'invalid', state: round };

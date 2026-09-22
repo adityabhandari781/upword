@@ -80,9 +80,10 @@ manual pass.
 
 **Acceptance criteria:**
 
-- [x] Empty submissions produce clear feedback while consuming one attempt;
-  non-alphabetic and missing-dictionary non-empty guesses produce clear
-  feedback without consuming an attempt.
+- [x] Empty submissions consume one attempt and announce that guesses should be
+  5-letter words; non-empty guesses that are not 5 letters produce the same
+  feedback without consuming an attempt. Other non-alphabetic and
+  missing-dictionary guesses produce clear feedback without consuming an attempt.
 - [x] Outcome and validation messages are available through an `aria-live`
   status region.
 - [x] The form and new-round control use native keyboard controls and focus.
@@ -123,8 +124,8 @@ display casing, reveal direction, and all game rules.
 - [x] The settings dialog offers Pixel and Times New Roman (default); applying
   either selection starts the next round with that mode.
 - [x] Times New Roman uses `"Times New Roman", Times, serif`, renders smooth
-  text, starts at 24px, adds 8px per wrong guess, and uses 4px per edge in
-  ends-to-center mode.
+  text, starts at 24px, adds 8px per wrong guess, and starts at 19.2px per edge
+  with 4px per-edge increments in ends-to-center mode.
 - [x] Pixel mode's current output and all attempt limits are unchanged.
 
 **Verification:**

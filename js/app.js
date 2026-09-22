@@ -229,9 +229,9 @@ form.addEventListener('submit', async (event) => {
   round = result.state;
 
   if (result.outcome === 'invalid') {
-    setStatus(input.value.trim()
-      ? 'That is not an allowed dictionary word.'
-      : 'Enter a dictionary word to reveal a row.');
+    setStatus(result.reason === 'length'
+      ? 'It should be a 5-letter word.'
+      : 'That is not an allowed dictionary word.');
     input.select();
     return;
   }
@@ -240,6 +240,8 @@ form.addEventListener('submit', async (event) => {
     setStatus('Correct! You found the hidden word!', true);
   } else if (result.outcome === 'lost') {
     setStatus('The full word is now revealed.');
+  } else if (result.reason === 'length') {
+    setStatus('It should be a 5-letter word.');
   } else {
     setStatus(settings.revealDirection === 'ends-to-center'
       ? 'Not quite. The next outer rows are visible.'

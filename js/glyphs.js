@@ -3,6 +3,8 @@ export const GLYPH_HEIGHT = 7;
 export const PIXEL_SIZE = 12;
 const SMOOTH_INITIAL_REVEAL_HEIGHT = 24;
 const SMOOTH_REVEAL_INCREMENT = 8;
+const ENDS_INITIAL_REVEAL_SCALE = 0.8;
+const ENDS_REVEAL_INCREMENT_SCALE = 0.5;
 
 const uppercaseGlyphs = {
   a: [
@@ -546,8 +548,12 @@ function drawSmoothWord(
 function smoothRevealHeight(dimensions, revealedRows, revealDirection) {
   if (revealedRows >= GLYPH_HEIGHT) return dimensions.height;
 
-  const scale = revealDirection === 'ends-to-center' ? 0.5 : 1;
-  return (SMOOTH_INITIAL_REVEAL_HEIGHT + Math.max(0, revealedRows - 1) * SMOOTH_REVEAL_INCREMENT) * scale;
+  const isEndsToCenter = revealDirection === 'ends-to-center';
+  const initialReveal = SMOOTH_INITIAL_REVEAL_HEIGHT
+    * (isEndsToCenter ? ENDS_INITIAL_REVEAL_SCALE : 1);
+  const revealIncrement = SMOOTH_REVEAL_INCREMENT
+    * (isEndsToCenter ? ENDS_REVEAL_INCREMENT_SCALE : 1);
+  return initialReveal + Math.max(0, revealedRows - 1) * revealIncrement;
 }
 
 export function drawTimesNewRomanWord(

@@ -104,6 +104,7 @@ next-round drawing
 
 - Reuse the existing canvas dimensions, reveal direction, and game-rule attempt
   limit. Times New Roman starts at 24px and grows by 8px per wrong guess;
+  ends-to-center starts at 19.2px per edge and grows by 4px per edge.
   Pixel keeps its existing seven logical rows.
 - Use the browser stack `"Times New Roman", Times, serif`; do not download a
   font or add a dependency. Browsers without Times New Roman use their normal

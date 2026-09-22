@@ -20,7 +20,7 @@ using `"Times New Roman", Times, serif`. `Pixel` mode retains the bitmap glyph
 rendering. `Comic Sans`
 uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
 reveal 24px and reveal an additional 8px after each wrong guess. In
-ends-to-center mode, each edge starts at 12px and grows by 4px. A completed
+ends-to-center mode, each edge starts at 19.2px and grows by 4px. A completed
 round reveals the full word. Ends-to-center rounds allow three wrong guesses;
 other modes allow `floor(pixelHeight / 2)`.
 A dedicated button in the page header provides a Dark (default) or Light
@@ -113,7 +113,9 @@ export function maxWrongGuesses(pixelHeight) {
 1. A new round randomly selects a word from the fixed answer list and displays
    its bottommost pixel row before any guess.
 2. Empty or whitespace-only submissions consume one wrong-guess attempt and
-   reveal one row; non-alphabetic and dictionary-missing non-empty guesses are
+   reveal one row and announce that guesses should be 5-letter words. Non-empty
+   guesses that are not 5 letters are rejected with the same message and do not
+   consume an attempt; other non-alphabetic and dictionary-missing guesses are
    rejected with an understandable message and do not consume an attempt.
 3. A valid non-empty wrong guess reveals exactly one next pixel row and consumes
    one wrong-guess attempt; it gives no per-letter result.
@@ -128,13 +130,13 @@ export function maxWrongGuesses(pixelHeight) {
 8. `Times New Roman` is selected by default and displays the puzzle word as
    smooth serif text in `"Times New Roman", Times, serif`.
 9. Times New Roman puzzles start clipped to 24px and expand by 8px for each
-   wrong guess; in ends-to-center mode, each edge starts at 12px and expands by
+   wrong guess; in ends-to-center mode, each edge starts at 19.2px and expands by
    4px per wrong guess.
    They use the normal browser fallback when Times New Roman is not installed.
 10. Selecting `Comic Sans` displays the puzzle word as smooth text in
     `"Comic Sans MS", "Comic Sans", cursive`, initially clipped to 24px and
     expanded by 8px for each wrong guess; in ends-to-center mode, each edge
-    starts at 12px and expands by 4px per wrong guess. It uses the normal
+    starts at 19.2px and expands by 4px per wrong guess. It uses the normal
     browser fallback when Comic Sans is not installed.
 11. `npm test` passes.
 12. A labelled header button can apply the light or dark color scheme without
