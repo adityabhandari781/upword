@@ -20,3 +20,15 @@ export async function awardXp({ roundId, revealDirection, wrongGuesses }) {
     return { ok: false, reason: 'unavailable' };
   }
 }
+
+export async function getMyProgress() {
+  const supabase = getSupabase();
+  if (!supabase || !await getCurrentSession()) return null;
+
+  try {
+    const { data, error } = await supabase.rpc('get_my_progress').single();
+    return error || !data ? null : data;
+  } catch {
+    return null;
+  }
+}

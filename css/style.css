@@ -73,12 +73,29 @@ input:focus-visible {
   margin-bottom: 1rem;
 }
 
+.primary-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.primary-nav a,
 .profile-action {
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--line);
   background: var(--card);
   color: var(--ink);
   font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.primary-nav a[aria-current="page"] {
+  border-color: var(--accent-dark);
+  background: var(--accent);
+}
+
+.profile-action {
+  white-space: nowrap;
 }
 
 .theme-toggle {
@@ -320,6 +337,44 @@ h2 {
   font-size: 0.9rem;
 }
 
+.leaderboard-list,
+.profile-stats {
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+
+.leaderboard-list {
+  display: grid;
+  gap: 0.5rem;
+  list-style-position: inside;
+}
+
+.leaderboard-list li,
+.profile-stats > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+}
+
+.leaderboard-xp,
+.profile-stats dd {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.profile-stats {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.profile-stats dt {
+  font-weight: 800;
+}
+
 .settings-actions {
   display: flex;
   justify-content: flex-end;
@@ -388,6 +443,14 @@ button:hover {
 
   .game-header {
     padding-right: 0;
+  }
+
+  .header-actions {
+    align-items: flex-start;
+  }
+
+  .primary-nav {
+    flex-wrap: wrap;
   }
 
   .card-heading {

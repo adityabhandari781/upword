@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { awardXp } from '../js/xp.js';
+import { awardXp, getMyProgress } from '../js/xp.js';
 
 test('does not award XP when Supabase is unavailable', async () => {
   assert.deepEqual(await awardXp({
@@ -8,4 +8,8 @@ test('does not award XP when Supabase is unavailable', async () => {
     revealDirection: 'bottom-up',
     wrongGuesses: 0,
   }), { ok: false, reason: 'unavailable' });
+});
+
+test('does not expose progress when Supabase is unavailable', async () => {
+  assert.equal(await getMyProgress(), null);
 });

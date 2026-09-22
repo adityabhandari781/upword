@@ -15,7 +15,11 @@
     <main class="game-shell">
       <header class="game-header">
         <div class="header-actions">
-          <button id="profile-action" class="profile-action" type="button" aria-haspopup="dialog" aria-controls="profile-dialog">Log in to level up</button>
+          <nav class="primary-nav" aria-label="Main navigation">
+            <a href="#play" data-view-link="play">Play</a>
+            <a href="#leaderboards" data-view-link="leaderboards">Leaderboards</a>
+            <button id="profile-action" class="profile-action" type="button" aria-haspopup="dialog" aria-controls="profile-dialog">Log in to level up</button>
+          </nav>
           <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Enable light mode" title="Enable light mode">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path class="moon-icon" d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
@@ -29,7 +33,7 @@
         <p class="intro">Read the pixels from the bottom up. Guess the word before its shape gives it away.</p>
       </header>
 
-      <section class="game-card" aria-labelledby="puzzle-heading">
+      <section id="play-view" class="game-card" aria-labelledby="puzzle-heading">
         <button id="settings-button" class="settings-button" type="button" aria-label="Open game settings" aria-haspopup="dialog" aria-controls="settings-dialog">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <circle cx="12" cy="12" r="3"/>
@@ -59,6 +63,32 @@
         </form>
 
         <button id="new-round" class="new-round" type="button" hidden>New puzzle</button>
+      </section>
+
+      <section id="leaderboards-view" class="game-card leaderboard-view" aria-labelledby="leaderboards-heading" hidden>
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">Global rankings</p>
+            <h2 id="leaderboards-heading">Leaderboards</h2>
+          </div>
+        </div>
+        <p id="leaderboard-status" class="status" aria-live="polite">Loading leaderboard…</p>
+        <ol id="leaderboard-list" class="leaderboard-list"></ol>
+      </section>
+
+      <section id="profile-view" class="game-card profile-view" aria-labelledby="profile-view-heading" hidden>
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">Your progression</p>
+            <h2 id="profile-view-heading">Profile</h2>
+          </div>
+        </div>
+        <p id="profile-view-status" class="status" aria-live="polite">Loading profile…</p>
+        <dl id="profile-stats" class="profile-stats" hidden>
+          <div><dt>Username</dt><dd id="profile-username"></dd></div>
+          <div><dt>Level</dt><dd id="profile-level"></dd></div>
+          <div><dt>Total XP</dt><dd id="profile-total-xp"></dd></div>
+        </dl>
       </section>
     </main>
 

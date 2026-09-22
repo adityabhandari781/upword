@@ -1,7 +1,8 @@
 import { allowedGuesses, answerWords } from './words.js';
 import { createRound, submitGuess } from './game.js';
 import { claimUsername, getCurrentProfile } from './profile.js';
-import { awardXp } from './xp.js';
+import { getLeaderboard } from './leaderboard.js';
+import { awardXp, getMyProgress } from './xp.js';
 import {
   GLYPH_HEIGHT,
   createDisplayWord,
@@ -30,6 +31,17 @@ const profileInput = document.querySelector('#username');
 const profileStatus = document.querySelector('#profile-status');
 const profileCancel = document.querySelector('#profile-cancel');
 const profileSubmit = document.querySelector('#profile-submit');
+const playView = document.querySelector('#play-view');
+const leaderboardsView = document.querySelector('#leaderboards-view');
+const profileView = document.querySelector('#profile-view');
+const navigationLinks = document.querySelectorAll('[data-view-link]');
+const leaderboardStatus = document.querySelector('#leaderboard-status');
+const leaderboardList = document.querySelector('#leaderboard-list');
+const profileViewStatus = document.querySelector('#profile-view-status');
+const profileStats = document.querySelector('#profile-stats');
+const profileUsername = document.querySelector('#profile-username');
+const profileLevel = document.querySelector('#profile-level');
+const profileTotalXp = document.querySelector('#profile-total-xp');
 
 const settings = {
   revealDirection: 'bottom-up',
@@ -61,14 +73,86 @@ function showProfileStatus(message) {
 
 function showProfileAction() {
   const isSignedIn = Boolean(profile);
-  profileAction.textContent = isSignedIn ? profile.username : 'Log in to level up';
-  profileAction.disabled = isSignedIn;
-  profileAction.title = isSignedIn ? `Logged in as ${profile.username}` : '';
+  profileAction.textContent = isSignedIn ? 'Profile' : 'Log in to level up';
+  profileAction.title = isSignedIn ? `View ${profile.username}'s profile` : '';
+  if (isSignedIn) {
+    profileAction.removeAttribute('aria-haspopup');
+    profileAction.removeAttribute('aria-controls');
+  } else {
+    profileAction.setAttribute('aria-haspopup', 'dialog');
+    profileAction.setAttribute('aria-controls', 'profile-dialog');
+  }
 }
 
 async function restoreProfile() {
   profile = await getCurrentProfile();
   showProfileAction();
+  showView();
+}
+
+function currentView() {
+  const view = location.hash.slice(1);
+  return ['leaderboards', 'profile'].includes(view) ? view : 'play';
+}
+
+function setNavigationState(view) {
+  navigationLinks.forEach((link) => {
+    link.toggleAttribute('aria-current', link.dataset.viewLink === view);
+  });
+  profileAction.toggleAttribute('aria-current', view === 'profile');
+}
+
+function renderLeaderboard(entries) {
+  leaderboardList.replaceChildren();
+  if (entries.length === 0) {
+    leaderboardStatus.textContent = 'No one has earned XP yet.';
+    return;
+  }
+
+  leaderboardStatus.textContent = '';
+  entries.forEach((entry) => {
+    const item = document.createElement('li');
+    const name = document.createElement('span');
+    const score = document.createElement('span');
+    name.textContent = `${entry.username} · Level ${entry.level}`;
+    score.className = 'leaderboard-xp';
+    score.textContent = `${entry.total_xp} XP`;
+    item.append(name, score);
+    leaderboardList.append(item);
+  });
+}
+
+async function loadLeaderboard() {
+  leaderboardStatus.textContent = 'Loading leaderboard…';
+  renderLeaderboard(await getLeaderboard());
+}
+
+async function loadProfileProgress() {
+  profileStats.hidden = true;
+  profileViewStatus.textContent = 'Loading profile…';
+  const progress = await getMyProgress();
+  if (!progress) {
+    profileViewStatus.textContent = 'Your progression is unavailable right now.';
+    return;
+  }
+
+  profileUsername.textContent = progress.username;
+  profileLevel.textContent = progress.level;
+  profileTotalXp.textContent = `${progress.total_xp} XP`;
+  profileViewStatus.textContent = '';
+  profileStats.hidden = false;
+}
+
+function showView() {
+  const requestedView = currentView();
+  const view = requestedView === 'profile' && !profile ? 'play' : requestedView;
+  playView.hidden = view !== 'play';
+  leaderboardsView.hidden = view !== 'leaderboards';
+  profileView.hidden = view !== 'profile';
+  setNavigationState(view);
+
+  if (view === 'leaderboards') loadLeaderboard();
+  if (view === 'profile') loadProfileProgress();
 }
 
 function chooseAnswer() {
@@ -190,6 +274,10 @@ settingsForm.addEventListener('submit', (event) => {
 });
 
 profileAction.addEventListener('click', () => {
+  if (profile) {
+    location.hash = 'profile';
+    return;
+  }
   profileForm.reset();
   showProfileStatus('');
   profileDialog.showModal();
@@ -224,7 +312,10 @@ profileForm.addEventListener('submit', async (event) => {
   setStatus(`Welcome, ${profile.username}! Wins can now earn XP.`);
 });
 
+window.addEventListener('hashchange', showView);
+
 applyTheme();
 showProfileAction();
+showView();
 restoreProfile();
 startRound();
