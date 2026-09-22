@@ -1,4 +1,4 @@
-# Height Wordle MVP Tasks
+# Upword MVP Tasks
 
 ## Task 1: Create the tested game engine
 

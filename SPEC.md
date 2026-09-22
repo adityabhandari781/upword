@@ -1,4 +1,4 @@
-# Spec: Height Wordle MVP
+# Spec: Upword MVP
 
 ## Objective
 

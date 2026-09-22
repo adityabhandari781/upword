@@ -1,4 +1,4 @@
-project_id = "height-wordle"
+project_id = "upword"
 
 [db]
 major_version = 15

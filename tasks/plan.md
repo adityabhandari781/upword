@@ -1,4 +1,4 @@
-# Implementation Plan: Height Wordle MVP
+# Implementation Plan: Upword MVP
 
 ## Overview
 
