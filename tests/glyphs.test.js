@@ -103,7 +103,7 @@ test('case modes preserve the answer letters while changing display case', () =>
   assert.equal(createDisplayWord('CABIN', 'lowercase'), 'cabin');
 });
 
-test('Times New Roman starts at 24 pixels and reveals 12 more after a wrong guess', () => {
+test('Times New Roman starts at 24 pixels and reveals 8 more after a wrong guess', () => {
   const context = createTextContext();
   const topDownContext = createTextContext();
   const afterWrongGuessContext = createTextContext();
@@ -124,7 +124,7 @@ test('Times New Roman starts at 24 pixels and reveals 12 more after a wrong gues
   assert.equal(dimensions.height, 84);
   assert.deepEqual(context.clipRects, [[0, 60, dimensions.width, 24]]);
   assert.deepEqual(topDownContext.clipRects, [[0, 0, dimensions.width, 24]]);
-  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 48, dimensions.width, 36]]);
+  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 52, dimensions.width, 32]]);
   assert.equal(context.textFills.length, 1);
   assert.equal(context.textFills[0][0], 'CABIN');
   assert.equal(context.textFills[0][2], 59.5);
@@ -133,7 +133,7 @@ test('Times New Roman starts at 24 pixels and reveals 12 more after a wrong gues
   assert.equal(context.textBaseline, 'alphabetic');
 });
 
-test('Times New Roman halves the initial and incremental reveal per end', () => {
+test('Times New Roman halves the initial and 8-pixel incremental reveal per end', () => {
   const context = createTextContext();
   const afterWrongGuessContext = createTextContext();
 
@@ -151,12 +151,12 @@ test('Times New Roman halves the initial and incremental reveal per end', () => 
     [0, 72, 348, 12],
   ]);
   assert.deepEqual(afterWrongGuessContext.clipRects, [
-    [0, 0, 348, 18],
-    [0, 66, 348, 18],
+    [0, 0, 348, 16],
+    [0, 68, 348, 16],
   ]);
 });
 
-test('Comic Sans starts at 24 pixels and reveals 12 more after a wrong guess', () => {
+test('Comic Sans starts at 24 pixels and reveals 8 more after a wrong guess', () => {
   const initialContext = createTextContext();
   const afterWrongGuessContext = createTextContext();
 
@@ -168,6 +168,6 @@ test('Comic Sans starts at 24 pixels and reveals 12 more after a wrong guess', (
   });
 
   assert.deepEqual(initialContext.clipRects, [[0, 60, dimensions.width, 24]]);
-  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 48, dimensions.width, 36]]);
+  assert.deepEqual(afterWrongGuessContext.clipRects, [[0, 52, dimensions.width, 32]]);
   assert.match(initialContext.font, /Comic Sans/);
 });
