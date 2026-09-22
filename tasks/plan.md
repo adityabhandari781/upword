@@ -121,7 +121,7 @@ next-round drawing
 ### Checkpoint: Times New Roman mode
 
 - [x] `npm test` passes.
-- [ ] Manual check: Pixel remains selected and unchanged by default; selecting
+- [x] Manual check: Pixel remains selected and unchanged by default; selecting
   Times New Roman starts a smooth serif puzzle whose initial visible band and
   subsequent reveals follow the selected direction. Chrome is unavailable in
   this environment, so this remains for a local browser pass.
@@ -142,3 +142,108 @@ next-round drawing
 ## Open Questions
 
 None.
+
+---
+
+# Implementation Plan: Identity and Profile
+
+Module id: `identity-profile`
+
+## Overview
+
+Add the smallest complete passwordless identity path to the existing static
+game: a protected profile schema, a browser-persisted Supabase anonymous
+session, and an accessible username-claim dialog. Unsigned gameplay remains
+the fallback when configuration or the network is unavailable.
+
+## Dependency Graph
+
+```text
+username contract + profiles migration + RLS tests
+                        │
+                        ▼
+           Supabase client + identity service
+                        │
+                        ▼
+         username dialog + current-profile state
+```
+
+## Architecture Decisions
+
+- Keep the application build-free. Load the documented Supabase JavaScript v2
+  browser bundle from jsDelivr and pin the exact release during implementation.
+- Put the public Supabase URL and publishable key in `js/supabase.js`; never put
+  a secret or service-role key in browser code.
+- Create the anonymous user only when a player submits a valid username. If the
+  profile insert fails, reuse that session on retry instead of creating orphan
+  auth users repeatedly.
+- Normalize usernames in one pure helper and repeat its constraints in
+  Postgres. Let the unique database constraint resolve simultaneous claims.
+- Keep `profiles` owner-only. The later leaderboard module will expose only its
+  safe ranking projection instead of opening profile rows publicly.
+- Do not add logout, rename, deletion, recovery, CAPTCHA, a bundler, or a new UI
+  abstraction; none is required by the approved module spec.
+
+## Implementation Slices
+
+### Slice 1: Secure profile foundation
+
+Add the profiles migration and focused pgTAP checks for grants, RLS ownership,
+username constraints, and uniqueness. This brings the highest-risk boundary
+forward before browser integration.
+
+### Slice 2: Reusable identity client
+
+Add the configured Supabase singleton, pure username normalization, session
+lookup, current-profile lookup, and retry-safe username claiming. Cover the
+pure contract with Node tests and keep expected failures in stable result
+objects.
+
+### Checkpoint: Identity foundation
+
+- Profile policy tests and username unit tests pass.
+- Missing Supabase configuration degrades to signed-out state.
+- No service-role or secret credential appears in client files.
+
+### Slice 3: Accessible claim flow
+
+Add the username dialog and a minimal header action that opens it, restores the
+current profile after refresh, reports validation/network/duplicate errors,
+and leaves the game playable throughout. The later `app-navigation` module
+will reuse and reposition this action in the navbar.
+
+### Checkpoint: Identity complete
+
+- A new browser session can claim a unique username.
+- Refresh restores the same profile without another prompt.
+- Duplicate and offline failures are announced without changing game state.
+- Existing game, glyph, and username tests plus JavaScript parse checks pass.
+- Database RLS tests pass when the local Supabase stack is available.
+
+## Risks and Mitigations
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| Anonymous session succeeds but profile insertion fails | Medium | Reuse the existing session and retry only the profile insert. |
+| Two players claim the same username concurrently | Medium | Treat the database unique violation as the authoritative `taken` result. |
+| Broad default grants bypass intended access | High | Revoke defaults, grant only owner operations, enable RLS, and test allow/deny cases. |
+| Missing config or network failure breaks gameplay | High | Initialize identity defensively and preserve the signed-out game path. |
+| CDN major changes unexpectedly | Medium | Pin an exact Supabase JavaScript v2 release during implementation. |
+
+## Verification Checkpoints
+
+```sh
+npm test
+node --check js/supabase.js
+node --check js/auth.js
+node --check js/profile.js
+npx supabase test db
+```
+
+Manual browser verification covers claim, refresh restoration, duplicate-name
+feedback, offline fallback, keyboard navigation, and screen-reader status text.
+
+## Open Questions
+
+None. Supabase project values are required for hosted integration verification,
+but placeholder configuration can be implemented and unit-tested without them.

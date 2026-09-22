@@ -129,7 +129,7 @@ display casing, reveal direction, and all game rules.
 
 - [x] Tests pass: `npm test`.
 - [x] Syntax check succeeds: `node --check js/glyphs.js && node --check js/app.js`.
-- [ ] Manual check: use the settings dialog to begin one Pixel and one Times
+- [x] Manual check: use the settings dialog to begin one Pixel and one Times
   New Roman puzzle, then submit a valid wrong guess in each. Chrome is
   unavailable in this environment, so this remains for a local browser pass.
 
@@ -147,7 +147,7 @@ display casing, reveal direction, and all game rules.
 ## Checkpoint: Times New Roman mode
 
 - [x] The focused renderer check and complete test suite pass.
-- [ ] Pixel and Times New Roman work through the existing settings dialog.
+- [x] Pixel and Times New Roman work through the existing settings dialog.
 
 ---
 
@@ -168,7 +168,7 @@ New Roman.
 
 - [x] Tests pass: `npm test`.
 - [x] Syntax check succeeds: `node --check js/glyphs.js && node --check js/app.js`.
-- [ ] Manual check: select Comic Sans and submit one valid wrong guess.
+- [x] Manual check: select Comic Sans and submit one valid wrong guess.
 
 **Dependencies:** Task 4
 
@@ -180,3 +180,123 @@ New Roman.
 - `tests/glyphs.test.js`
 
 **Estimated scope:** Medium (4 files)
+
+---
+
+# Identity and Profile Tasks
+
+Module id: `identity-profile`
+
+## Task 6: Establish the protected profile schema
+
+**Description:** Add reproducible Supabase configuration, a profiles migration,
+and database policy tests. The schema owns username validity and uniqueness;
+grants and RLS allow an authenticated anonymous user to insert and read only
+their own row.
+
+**Acceptance criteria:**
+
+- [ ] `profiles` stores an auth user id, normalized unique username, and
+  creation timestamp with database-enforced username constraints.
+- [ ] Signed-out requests and other authenticated users cannot read or insert a
+  profile they do not own.
+- [ ] Broad default table privileges are revoked before the minimum
+  authenticated grants are applied.
+
+**Verification:**
+
+- [ ] Local schema applies cleanly: `npx supabase db reset`.
+- [ ] Database policy checks pass: `npx supabase test db`.
+- [ ] Review the migration for any browser-visible secret or service-role key;
+  none is present.
+
+**Dependencies:** None
+
+**Files likely touched:**
+
+- `supabase/config.toml`
+- `supabase/migrations/*_identity_profile.sql`
+- `supabase/tests/profiles_rls.test.sql`
+
+**Estimated scope:** Medium (3 files)
+
+## Task 7: Add the reusable identity client
+
+**Description:** Add a lazily configured Supabase singleton and small auth and
+profile modules. The profile module owns pure username normalization plus
+retry-safe profile claiming that reuses an existing anonymous session after a
+failed insert.
+
+**Acceptance criteria:**
+
+- [ ] Usernames normalize to lowercase and accept only 3–20 ASCII letters,
+  digits, or underscores, with focused boundary tests.
+- [ ] Profile lookup returns signed-out state when configuration, session, or
+  profile is absent without throwing into the game.
+- [ ] Username claiming maps invalid, duplicate, and unavailable outcomes to
+  stable results and does not create a second anonymous session on retry.
+
+**Verification:**
+
+- [ ] Unit suite passes: `npm test`.
+- [ ] New modules parse: `node --check js/supabase.js && node --check js/auth.js && node --check js/profile.js`.
+- [ ] Review browser configuration and confirm it accepts only a project URL
+  and publishable key.
+
+**Dependencies:** Task 6
+
+**Files likely touched:**
+
+- `js/supabase.js`
+- `js/auth.js`
+- `js/profile.js`
+- `tests/profile.test.js`
+
+**Estimated scope:** Medium (4 files)
+
+## Checkpoint: Identity foundation
+
+- [ ] Tasks 6–7 acceptance criteria pass.
+- [ ] Profile RLS permits owner access and denies non-owner access.
+- [ ] Missing Supabase configuration behaves as signed out.
+- [ ] Review with the user before beginning the browser claim flow.
+
+## Task 8: Connect the accessible username claim flow
+
+**Description:** Load the pinned Supabase JavaScript v2 browser bundle and add
+a minimal header login action plus username dialog. Restore a current profile
+on load, announce claim errors accessibly, and keep every game interaction
+working when identity is unavailable.
+
+**Acceptance criteria:**
+
+- [ ] Signed-out players see “Log in to level up”; claiming an available
+  username changes the action to the current username.
+- [ ] Refresh restores the same profile, while invalid, duplicate, and network
+  failures leave unsigned play intact and show an accessible message.
+- [ ] The dialog is keyboard-operable, labels its controls, restores focus on
+  close, and does not alter the existing puzzle state.
+
+**Verification:**
+
+- [ ] Complete suite passes: `npm test`.
+- [ ] Browser entry point parses: `node --check js/app.js`.
+- [ ] Manual browser check covers claim, refresh, duplicate username, offline
+  fallback, keyboard-only operation, and narrow-screen layout.
+
+**Dependencies:** Tasks 6–7 and the Identity foundation checkpoint
+
+**Files likely touched:**
+
+- `index.html`
+- `css/style.css`
+- `js/app.js`
+
+**Estimated scope:** Medium (3 files)
+
+## Checkpoint: Identity profile complete
+
+- [ ] All identity acceptance criteria and the project Definition of Done pass.
+- [ ] Existing gameplay and settings behavior have no regressions.
+- [ ] No secret/service-role credential is present in tracked browser files.
+- [ ] Review with the user before specifying `xp-progression`.
