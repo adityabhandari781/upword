@@ -1,5 +1,6 @@
 import { allowedGuesses, answerWords } from './words.js';
 import { createRound, submitGuess } from './game.js';
+import { claimUsername, getCurrentProfile } from './profile.js';
 import {
   GLYPH_HEIGHT,
   createDisplayWord,
@@ -21,6 +22,13 @@ const settingsDialog = document.querySelector('#settings-dialog');
 const settingsForm = document.querySelector('#settings-form');
 const settingsCancel = document.querySelector('#settings-cancel');
 const themeToggle = document.querySelector('#theme-toggle');
+const profileAction = document.querySelector('#profile-action');
+const profileDialog = document.querySelector('#profile-dialog');
+const profileForm = document.querySelector('#profile-form');
+const profileInput = document.querySelector('#username');
+const profileStatus = document.querySelector('#profile-status');
+const profileCancel = document.querySelector('#profile-cancel');
+const profileSubmit = document.querySelector('#profile-submit');
 
 const settings = {
   revealDirection: 'bottom-up',
@@ -31,6 +39,7 @@ const settings = {
 
 let round;
 let displayWord;
+let profile;
 
 function setStatus(message, isCorrect = false) {
   status.textContent = message;
@@ -42,6 +51,22 @@ function applyTheme() {
   document.documentElement.dataset.theme = settings.theme;
   themeToggle.setAttribute('aria-label', isDark ? 'Enable light mode' : 'Enable dark mode');
   themeToggle.title = isDark ? 'Enable light mode' : 'Enable dark mode';
+}
+
+function showProfileStatus(message) {
+  profileStatus.textContent = message;
+}
+
+function showProfileAction() {
+  const isSignedIn = Boolean(profile);
+  profileAction.textContent = isSignedIn ? profile.username : 'Log in to level up';
+  profileAction.disabled = isSignedIn;
+  profileAction.title = isSignedIn ? `Logged in as ${profile.username}` : '';
+}
+
+async function restoreProfile() {
+  profile = await getCurrentProfile();
+  showProfileAction();
 }
 
 function chooseAnswer() {
@@ -146,5 +171,42 @@ settingsForm.addEventListener('submit', (event) => {
   startRound();
 });
 
+profileAction.addEventListener('click', () => {
+  profileForm.reset();
+  showProfileStatus('');
+  profileDialog.showModal();
+  profileInput.focus();
+});
+
+profileCancel.addEventListener('click', () => profileDialog.close());
+profileDialog.addEventListener('close', () => profileAction.focus());
+
+profileForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  profileSubmit.disabled = true;
+  showProfileStatus('Creating your profile…');
+
+  const result = await claimUsername(profileInput.value);
+  profileSubmit.disabled = false;
+
+  if (!result.ok) {
+    showProfileStatus(result.reason === 'invalid'
+      ? 'Choose 3–20 letters, numbers, or underscores.'
+      : result.reason === 'taken'
+        ? 'That username is already taken.'
+        : 'Profiles are unavailable. You can still play without leveling up.');
+    profileInput.focus();
+    profileInput.select();
+    return;
+  }
+
+  profile = result.profile;
+  showProfileAction();
+  profileDialog.close();
+  setStatus(`Welcome, ${profile.username}! Wins can now earn XP.`);
+});
+
 applyTheme();
+showProfileAction();
+restoreProfile();
 startRound();
