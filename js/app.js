@@ -211,7 +211,7 @@ function startRound() {
     ? 'The top row is your first clue.'
     : settings.revealDirection === 'ends-to-center'
       ? 'The top and bottom rows are your first clues.'
-      : 'The bottom row is your first clue.');
+      : 'The bottom row is your first clue. (Hint: it is 5 letters long)');
   input.value = '';
   showRound();
   input.focus();
