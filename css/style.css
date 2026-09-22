@@ -238,8 +238,8 @@ h2 {
   place-items: center;
   overflow: hidden;
   padding: 1rem;
-  border: 1px solid #000;
-  background: #000;
+  border: 1px solid #3b4c5d;
+  background: #172431;
 }
 
 #word-canvas {
