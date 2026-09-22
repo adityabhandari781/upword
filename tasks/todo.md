@@ -3,15 +3,16 @@
 ## Task 1: Create the tested game engine
 
 **Description:** Add the fixed word lists and a pure module that creates a
-round, validates a normalized guess, records valid wrong guesses, and reports
+round, validates a normalized guess, records wrong submissions, and reports
 win/loss state from the bitmap height.
 
 **Acceptance criteria:**
 
-- [x] Only words in the allowed-guess list are accepted, and invalid input does
-  not change the round.
-- [x] Each valid wrong guess increases revealed rows and wrong attempts by one.
-- [x] A correct guess wins; the `floor(pixelHeight / 2)`-th wrong guess loses.
+- [x] Only non-empty words in the allowed-guess list are accepted; invalid
+  non-empty input does not change the round.
+- [x] Each wrong submission increases revealed rows and wrong attempts by one.
+- [x] A correct guess wins; the `floor(pixelHeight / 2)`-th wrong submission
+  loses.
 
 **Verification:**
 
@@ -43,7 +44,7 @@ reveal.
 **Acceptance criteria:**
 
 - [x] A new round shows only the bottom glyph row before a guess.
-- [x] A valid wrong guess reveals exactly the next row and shows no letter
+- [x] A wrong submission reveals exactly the next row and shows no letter
   feedback.
 - [x] Correct and lost rounds expose a working new-round control.
 
@@ -79,7 +80,8 @@ manual pass.
 
 **Acceptance criteria:**
 
-- [x] Empty, non-alphabetic, and missing-dictionary guesses produce clear
+- [x] Empty submissions produce clear feedback while consuming one attempt;
+  non-alphabetic and missing-dictionary non-empty guesses produce clear
   feedback without consuming an attempt.
 - [x] Outcome and validation messages are available through an `aria-live`
   status region.
@@ -113,7 +115,7 @@ manual pass.
 
 **Description:** Add a `Pixel`/`Times New Roman` setting. Keep Times New Roman
 selected by default. When a new round uses Times New Roman, draw smooth text through the
-agreed 24px initial reveal, then add 12px per valid wrong guess while preserving
+agreed 24px initial reveal, then add 8px per wrong guess while preserving
 display casing, reveal direction, and all game rules.
 
 **Acceptance criteria:**
@@ -121,8 +123,8 @@ display casing, reveal direction, and all game rules.
 - [x] The settings dialog offers Pixel and Times New Roman (default); applying
   either selection starts the next round with that mode.
 - [x] Times New Roman uses `"Times New Roman", Times, serif`, renders smooth
-  text, starts at 24px, adds 12px per wrong guess, and respects bottom-up,
-  top-down, and ends-to-center clipping at half those values per edge.
+  text, starts at 24px, adds 8px per wrong guess, and uses 4px per edge in
+  ends-to-center mode.
 - [x] Pixel mode's current output and all attempt limits are unchanged.
 
 **Verification:**
@@ -154,14 +156,14 @@ display casing, reveal direction, and all game rules.
 ## Task 5: Add Comic Sans font mode
 
 **Description:** Add Comic Sans as a smooth font option in the existing puzzle
-font settings. It uses the same 24px initial reveal and 12px increment as Times
+font settings. It uses the same 24px initial reveal and 8px increment as Times
 New Roman.
 
 **Acceptance criteria:**
 
 - [x] The settings dialog offers Comic Sans alongside Pixel and Times New Roman.
 - [x] Comic Sans uses `"Comic Sans MS", "Comic Sans", cursive` and the standard
-  24px initial reveal with a 12px increment per valid wrong guess.
+  24px initial reveal with an 8px increment per wrong guess.
 - [x] Pixel and Times New Roman behavior remains unchanged.
 
 **Verification:**

@@ -4,11 +4,12 @@
 
 Build a responsive, browser-only word-guessing game. A hidden word is selected
 from a bundled dictionary and rendered in a pixel font. The player begins with
-only the word image's bottom row visible. Each valid, incorrect guess reveals
-the next row upward; no Wordle-style letter feedback is shown.
+only the word image's bottom row visible. Each incorrect submission, including
+an empty one, reveals the next row upward; no Wordle-style letter feedback is
+shown.
 
 The player wins by guessing the word. They lose after `floor(pixelHeight / 2)`
-valid wrong guesses. During play, the image stays partially hidden; when a
+wrong submissions. During play, the image stays partially hidden; when a
 round ends, its full word is revealed. Success is a player being able to start,
 play, win or lose, and immediately start a new random round on modern desktop
 and mobile browsers. A settings control provides bottom-up (default), top-down,
@@ -18,8 +19,8 @@ display casing; and a puzzle font mode for the next puzzle. The default
 using `"Times New Roman", Times, serif`. `Pixel` mode retains the bitmap glyph
 rendering. `Comic Sans`
 uses `"Comic Sans MS", "Comic Sans", cursive`. Both smooth modes initially
-reveal 24px and reveal an additional 12px after each valid wrong guess. In
-ends-to-center mode, each edge starts at 12px and grows by 6px. A completed
+reveal 24px and reveal an additional 8px after each wrong guess. In
+ends-to-center mode, each edge starts at 12px and grows by 4px. A completed
 round reveals the full word. Ends-to-center rounds allow three wrong guesses;
 other modes allow `floor(pixelHeight / 2)`.
 A dedicated button in the page header provides a Dark (default) or Light
@@ -89,15 +90,16 @@ export function maxWrongGuesses(pixelHeight) {
   increment the revealed-row count by one, and a loss at the half-height limit.
 - Test all reveal directions and stable mixed-case display words.
 - Add a small renderer-selection test proving that `Pixel` remains the default
-  and `Times New Roman` starts at 24px, expands by 12px after a wrong guess, and
+  and `Times New Roman` starts at 24px, expands by 8px after a wrong guess, and
   uses the smooth-text renderer.
 - Manually verify the canvas reveal moves bottom-to-top and that keyboard-only
   and narrow-screen play work, including the settings dialog.
 
 ## Boundaries
 
-- Always: validate every submitted guess against the bundled allowed-guess
-  list; preserve accessible labels, focus behavior, and live win/loss feedback;
+- Always: validate every non-empty submitted guess against the bundled
+  allowed-guess list; preserve accessible labels, focus behavior, and live
+  win/loss feedback;
   run the rule tests before a change is considered complete; keep Pixel mode's
   seven logical reveal bands and all attempt limits unchanged.
 - Ask first: add a dependency or framework; add persistence, a backend,
@@ -110,12 +112,13 @@ export function maxWrongGuesses(pixelHeight) {
 
 1. A new round randomly selects a word from the fixed answer list and displays
    its bottommost pixel row before any guess.
-2. Empty, non-alphabetic, and dictionary-missing guesses are rejected with an
-   understandable message and do not consume an attempt or reveal a row.
-3. A valid wrong guess reveals exactly one next pixel row and consumes one
-   wrong-guess attempt; it gives no per-letter result.
+2. Empty or whitespace-only submissions consume one wrong-guess attempt and
+   reveal one row; non-alphabetic and dictionary-missing non-empty guesses are
+   rejected with an understandable message and do not consume an attempt.
+3. A valid non-empty wrong guess reveals exactly one next pixel row and consumes
+   one wrong-guess attempt; it gives no per-letter result.
 4. A correct valid guess ends the round as a win without revealing another row.
-5. The loss limit is `floor(pixelHeight / 2)` valid wrong guesses; when a round
+5. The loss limit is `floor(pixelHeight / 2)` wrong submissions; when a round
    ends, its pixel canvas is fully revealed, with a new-round control available.
 6. The game works with keyboard input and at narrow mobile widths, with visible
    controls and outcome messages available to assistive technologies.
@@ -124,14 +127,15 @@ export function maxWrongGuesses(pixelHeight) {
    reveal direction, or attempt-limit rules.
 8. `Times New Roman` is selected by default and displays the puzzle word as
    smooth serif text in `"Times New Roman", Times, serif`.
-9. Times New Roman puzzles start clipped to 24px and expand by 12px for each
-   valid wrong guess; in ends-to-center mode, each edge uses half those values.
+9. Times New Roman puzzles start clipped to 24px and expand by 8px for each
+   wrong guess; in ends-to-center mode, each edge starts at 12px and expands by
+   4px per wrong guess.
    They use the normal browser fallback when Times New Roman is not installed.
 10. Selecting `Comic Sans` displays the puzzle word as smooth text in
     `"Comic Sans MS", "Comic Sans", cursive`, initially clipped to 24px and
-    expanded by 12px for each valid wrong guess; in ends-to-center mode, each
-    edge uses half those values. It uses the normal browser fallback when Comic
-    Sans is not installed.
+    expanded by 8px for each wrong guess; in ends-to-center mode, each edge
+    starts at 12px and expands by 4px per wrong guess. It uses the normal
+    browser fallback when Comic Sans is not installed.
 11. `npm test` passes.
 12. A labelled header button can apply the light or dark color scheme without
     changing puzzle rules, answer validation, or font selection.
