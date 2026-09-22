@@ -3,6 +3,7 @@ import { createRound, submitGuess } from './game.js';
 import { claimUsername, getCurrentProfile } from './profile.js';
 import { getLeaderboard, leaderboardEmptyMessage } from './leaderboard.js';
 import { awardXp, getMyProgress } from './xp.js';
+import { levelFromXp } from './progression.js';
 import {
   GLYPH_HEIGHT,
   createDisplayWord,
@@ -261,8 +262,14 @@ form.addEventListener('submit', async (event) => {
     wrongGuesses: round.wrongGuesses,
   });
   if (award.ok && roundId === completedRoundId) {
+    const previousLevel = levelFromXp(
+      award.progress.total_xp - award.progress.awarded_xp,
+    );
+    const levelMessage = award.progress.level > previousLevel
+      ? ` · Level ${award.progress.level}!`
+      : '';
     setStatus(
-      `Correct! +${award.progress.awarded_xp} XP · ${award.progress.total_xp} XP · Level ${award.progress.level}`,
+      `Correct! +${award.progress.awarded_xp} XP${levelMessage}`,
       true,
     );
   }
