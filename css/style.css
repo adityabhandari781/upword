@@ -83,6 +83,10 @@ input:focus-visible {
   display: none !important;
 }
 
+.primary-nav[hidden] + .account-actions {
+  margin-left: auto;
+}
+
 .account-actions {
   display: flex;
   align-items: center;
