@@ -1,0 +1,2 @@
+uv run python -m http.server 8001
+brave-browser --remote-debugging-port=9222 --user-data-dir=/tmp/brave-codex-profile
